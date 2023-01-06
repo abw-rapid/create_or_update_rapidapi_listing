@@ -12,6 +12,17 @@ The action needs an OpenAPI v3.0 spec file in JSON format to exist in the repo. 
 name of this file (or path to it, if it is in a subdirectory), needs to be fed to
 the action by setting the `spec_path` environment variable.
 
+The action takes the `info.title` field from the provided OpenAPI spec file as the name
+of the API. It will then search for an existing API listing on the Hub that is owned by
+the entity with `owner_id` as its ID (see below at [Inputs](#inputs) for mandatory
+variables).
+
+If an existing API listing with the same name can be found, it will be updated, provided
+the version in `info.version` in the OpenAPI spec file is semantically higher than the
+version number of the API listing on the Hub.
+
+If an existing API with the same name cannot be found, a new API listing will be created. The new API listing will be owned by the owner of the `x-rapidapi-key`.
+
 ### Requirements
 
 If you are a RapidAPI Enterprise Hub user, you need the preview of the GraphQL Platform
@@ -82,5 +93,6 @@ steps:
 
 ### Limitations
 
--   You can only use this Action with APIs you own, either through personal or team credentials.
--   There is no support for `on-behalf-of` or `x-rapidapi-identity-key` yet.
+- You can only use this Action with APIs you own, either through personal or team crdentials.
+- There is no support for `on-behalf-of` or `x-rapidapi-identity-key` yet.
+- There is no check to verify whether the `owner_id` and the `x-rapidapi-key` belong together
