@@ -1,17 +1,17 @@
 {
     "env": {
-        "browser": true,
-        "commonjs": true,
+        "browser": false,
+        "node": true,
         "es2021": true,
         "jest/globals": true
     },
-    "extends": "standard",
-    "overrides": [
-    ],
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "warnOnUnsupportedTypeScriptVersion": false,
+        "sourceType": "module"
     },
-    "rules": {
-    },
-    "plugins": ["jest"]
+    "rules": {},
+    "plugins": [
+        "jest"
+    ],
+    "parser": "@typescript-eslint/parser"
 }
