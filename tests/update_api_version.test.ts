@@ -1,4 +1,4 @@
-const { updateApiVersion } = require('../main/update_api_version')
+const { updateApiVersion } = require('../src/update_api_version')
 const nock = require('nock')
 const fs = require('fs')
 

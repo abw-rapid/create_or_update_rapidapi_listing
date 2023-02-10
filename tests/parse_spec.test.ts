@@ -2,7 +2,7 @@ const {
   apiVersionFromSpec,
   apiNameFromSpec,
   apiDescriptionFromSpec
-} = require('../main/parse_spec')
+} = require('../src/parse_spec')
 
 test('return the version of a spec file correctly', () => {
   expect(apiVersionFromSpec(JSON.parse(mySpec))).toBe('1.0.1')

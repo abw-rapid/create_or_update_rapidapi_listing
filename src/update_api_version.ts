@@ -55,7 +55,7 @@ async function updateApiVersion (specPath, apiVersionId) {
   ) {
     // this happens when an unknown collection is part of the spec; we get a 200, but
     // also an unprocessable_entity error :/
-    const errorMessage = []
+    let errorMessage = new Array()
     res.data.errors.forEach((value) => errorMessage.push(value.message))
     throw new SpecParsingError(`Error parsing spec: ${errorMessage}`)
   } else {

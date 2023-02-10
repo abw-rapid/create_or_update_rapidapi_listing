@@ -1,4 +1,4 @@
-const { createApiVersion } = require('../main/create_api_version')
+const { createApiVersion } = require('../src/create_api_version')
 const nock = require('nock')
 const graphql = require('graphql-request')
 

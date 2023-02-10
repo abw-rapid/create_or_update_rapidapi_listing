@@ -1,4 +1,4 @@
-const { getCurrentApiVersion } = require('../main/get_current_api_version')
+const { getCurrentApiVersion } = require('../src/get_current_api_version')
 const graphql = require('graphql-request')
 
 afterEach(() => {

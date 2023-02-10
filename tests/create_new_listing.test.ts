@@ -1,4 +1,4 @@
-const { createNewListing } = require('../main/create_new_listing.js')
+const { createNewListing } = require('../src/create_new_listing')
 const nock = require('nock')
 const fs = require('fs')
 

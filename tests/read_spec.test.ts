@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { readSpec } = require('../main/read_spec')
+const { readSpec } = require('../src/read_spec')
 
 const contents = JSON.stringify({
   openapi: '3.0.0',

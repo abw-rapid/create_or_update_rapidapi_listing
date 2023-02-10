@@ -28,7 +28,7 @@ async function alreadyExists (name: string, ownerId: number, client: GraphQLClie
   }
   const data = await client.request(query, variables)
   if (data.apis.nodes.length === 0) {
-    return null
+    return "0"
   } else if (data.apis.nodes.length === 1) {
     return data.apis.nodes[0].id
   } else {
