@@ -1,6 +1,7 @@
 const returnGraphqlObject = {
   'content-type': 'application/json',
   'x-rapidapi-key': 'rapidapi_key',
+  'x-rapidapi-identity-key': 'rapidapi_identity_key',
   'x-rapidapi-host': 'rapidapi_graphql_host'
 }
 
