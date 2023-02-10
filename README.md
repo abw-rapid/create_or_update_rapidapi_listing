@@ -21,7 +21,8 @@ If an existing API listing with the same name can be found, it will be updated, 
 the version in `info.version` in the OpenAPI spec file is semantically higher than the
 version number of the API listing on the Hub.
 
-If an existing API with the same name cannot be found, a new API listing will be created. The new API listing will be owned by the owner of the `x-rapidapi-key`.
+If an existing API with the same name cannot be found, a new API listing will be
+created. The new API listing will be owned by the owner of the `x-rapidapi-key`.
 
 ### Requirements
 
@@ -29,6 +30,9 @@ If you are a RapidAPI Enterprise Hub user, you need the preview of the GraphQL P
 API enabled in your Hub. You will need credentials (the `x-rapidapi-key` and
 `x-rapidapi-host` headers) of a user or team that is enabled to use this API, as well as
 their owner ID.
+
+Note: if the used `x-rapidapi-key` is owned by a team, you also need to provide
+an `x-rapidapi-identity-key`, which needs to be owned by an **individual user**.
 
 ### Example workflow
 
@@ -47,10 +51,13 @@ jobs:
                   owner_id: 12345678
                   graphql_url: https://platform-graphql.p.rapidapi.com/
                   x_rapidapi_key: a-very-long-api-key
+                  x_rapidapi_key: another-very-long-api-key
                   x_rapidapi_graphql_host: platform-graphql.yourhub.rapidapi.com
 ```
 
-Usually, you would set those variables (`owner_id` etc.) as Action secrets for your repo. In that case, you would refer to them as e.g. `${{ secrets.OWNER_ID }}`, assuming you named the secret storing your owner ID `OWNER_ID`.
+Usually, you would set those variables (`owner_id` etc.) as Action secrets for your
+repo. In that case, you would refer to them as e.g. `${{ secrets.OWNER_ID }}`, assuming
+you named the secret storing your owner ID `OWNER_ID`.
 
 ### Inputs
 
@@ -59,6 +66,7 @@ Usually, you would set those variables (`owner_id` etc.) as Action secrets for y
 | `spec_path`               | Path to the OpenAPI spec file in JSON format                                                                                       | True     |
 | `owner_id`                | Id of the team / user owning the existing API, or team / user to own the new API | True |
 | `x_rapidapi_key`          | API key for the user / the team that will own this API on the Hub                                                                  | True     |
+| `x_rapidapi_identity_key` | API key for the user that executes the action. If `x_rapidapi_key` is owned by a team, this field is required and needs to be belong to an individual user. | False     |
 | `x_rapidapi_graphql_host` | GraphQL platform API host for the user / the team that will own this API on the Hub (e.g. `graphql-platform.yourhub.rapidapi.com`) | True     |
 | `graphql_url`             | The URL to the GraphQL Platform API, defaults to `https://graphql-platform.p.rapidapi.com/` (mind the slash!)                      | True     |
 
@@ -94,5 +102,8 @@ steps:
 ### Limitations
 
 - You can only use this Action with APIs you own, either through personal or team crdentials.
-- There is no support for `on-behalf-of` or `x-rapidapi-identity-key` yet.
-- There is no check to verify whether the `owner_id` and the `x-rapidapi-key` belong together
+- There is no check to verify whether the `owner_id`, `x-rapidapi-identity-key` and the
+  `x-rapidapi-key` belong together.
+- There is no check whether an `x-rapidapi-identity-key` is required (in other words:
+  whether or not the `x-rapidapi-key` belongs to a team).
+- There is no support for `on-behalf-of`.
