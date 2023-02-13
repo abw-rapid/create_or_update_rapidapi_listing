@@ -1,4 +1,4 @@
-const fs = require('fs')
+import fs from 'fs'
 
 /**
  * Return JSON string containing the contents of an OAS
@@ -7,7 +7,7 @@ const fs = require('fs')
  */
 function readSpec (oas) {
   try {
-    const spec = fs.readFileSync(oas)
+    const spec = fs.readFileSync(oas, "utf-8")
     try {
       return JSON.parse(spec)
     } catch (err) {
@@ -19,4 +19,4 @@ function readSpec (oas) {
   }
 }
 
-module.exports = { readSpec }
+export { readSpec }

@@ -1,6 +1,6 @@
-const graphql = require('graphql-request')
-const { getCurrentVersion } = require('./get_current_version')
-const { NoCurrentVersionError } = require('./errors')
+import { gql } from 'graphql-request'
+import { getCurrentVersion } from './get_current_version.js'
+import { NoCurrentVersionError } from './errors.js'
 
 /**
  * Fetch the id of the latest version of an API
@@ -9,7 +9,7 @@ const { NoCurrentVersionError } = require('./errors')
  * @return {object} An object containing the name and id of the latest version of this API
  */
 async function getCurrentApiVersion (apiId, client) {
-  const query = graphql.gql`
+  const query = gql`
     query apiVersions($where: ApiVersionWhereInput) {
         apiVersions(where: $where) {
           nodes {
@@ -40,4 +40,4 @@ async function getCurrentApiVersion (apiId, client) {
   }
 }
 
-module.exports = { getCurrentApiVersion }
+export { getCurrentApiVersion }

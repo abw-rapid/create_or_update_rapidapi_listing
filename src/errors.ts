@@ -40,7 +40,7 @@ class UnexpectedStatusError extends Error {
   }
 }
 
-module.exports = {
+export {
   InvalidCollectionError,
   NoCurrentVersionError,
   PlatformAPIError,

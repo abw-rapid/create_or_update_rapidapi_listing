@@ -1,5 +1,8 @@
-const semverValid = require('semver/functions/valid');
-const { SpecParsingError } = require('./errors');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.apiDescriptionFromSpec = exports.apiNameFromSpec = exports.apiVersionFromSpec = void 0;
+const semver_1 = require("semver");
+const errors_js_1 = require("./errors.js");
 /**
  * Return the version field of a spec file
  * @param {string} spec The contents of a spec file
@@ -7,17 +10,18 @@ const { SpecParsingError } = require('./errors');
  */
 function apiVersionFromSpec(spec) {
     if (spec.info.version === undefined) {
-        throw new SpecParsingError("No property 'version' in spec");
+        throw new errors_js_1.SpecParsingError("No property 'version' in spec");
     }
     else {
-        if (semverValid(spec.info.version)) {
+        if ((0, semver_1.valid)(spec.info.version)) {
             return spec.info.version;
         }
         else {
-            throw new SpecParsingError(`Not a valid version according to semver: ${spec.info.version}`);
+            throw new errors_js_1.SpecParsingError(`Not a valid version according to semver: ${spec.info.version}`);
         }
     }
 }
+exports.apiVersionFromSpec = apiVersionFromSpec;
 /**
  * Return the name (title) field of a spec file
  * @param {string} spec The contents of a spec file
@@ -25,12 +29,13 @@ function apiVersionFromSpec(spec) {
  */
 function apiNameFromSpec(spec) {
     if (spec.info.title === undefined) {
-        throw new SpecParsingError("No property 'title' in spec");
+        throw new errors_js_1.SpecParsingError("No property 'title' in spec");
     }
     else {
         return spec.info.title;
     }
 }
+exports.apiNameFromSpec = apiNameFromSpec;
 /**
  * Return the description field of a spec file
  * @param {string} spec The contents of a spec file
@@ -38,16 +43,10 @@ function apiNameFromSpec(spec) {
  */
 function apiDescriptionFromSpec(spec) {
     if (spec.info.description === undefined) {
-        throw new SpecParsingError("No property 'description' in spec");
+        throw new errors_js_1.SpecParsingError("No property 'description' in spec");
     }
     else {
         return spec.info.description;
     }
 }
-module.exports = {
-    apiVersionFromSpec,
-    apiNameFromSpec,
-    apiDescriptionFromSpec
-};
-export {};
-//# sourceMappingURL=parse_spec.js.map
+exports.apiDescriptionFromSpec = apiDescriptionFromSpec;

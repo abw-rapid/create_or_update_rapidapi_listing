@@ -1,4 +1,4 @@
-const core = require('@actions/core')
+import * as core from '@actions/core'
 
 function formGraphqlHeaders () {
   const xRapidapiKey = core.getInput('X_RAPIDAPI_KEY', { required: true })
@@ -30,4 +30,4 @@ function graphqlHeaders () {
   }
 }
 
-module.exports = { formGraphqlHeaders, graphqlHeaders }
+export { formGraphqlHeaders, graphqlHeaders }

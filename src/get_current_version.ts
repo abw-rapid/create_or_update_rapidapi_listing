@@ -1,5 +1,5 @@
-const semverValid = require('semver/functions/valid')
-const { NoCurrentVersionError, SpecParsingError } = require('./errors')
+import { valid } from 'semver'
+import { NoCurrentVersionError, SpecParsingError } from './errors.js'
 
 /**
  * Select the version set as current from a list of api_versions <br/>
@@ -15,7 +15,7 @@ function getCurrentVersion (versions) {
       'No version is marked as current. That should be impossible!'
     )
   } else {
-    if (semverValid(current.name) != null) {
+    if (valid(current.name) != null) {
       return {
         name: current.name,
         id: current.id
@@ -28,4 +28,4 @@ function getCurrentVersion (versions) {
   }
 }
 
-module.exports = { getCurrentVersion }
+export { getCurrentVersion }

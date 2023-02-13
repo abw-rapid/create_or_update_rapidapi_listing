@@ -1,5 +1,8 @@
-const semverValid = require('semver/functions/valid');
-const { NoCurrentVersionError, SpecParsingError } = require('./errors');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getCurrentVersion = void 0;
+const semver_1 = require("semver");
+const errors_js_1 = require("./errors.js");
 /**
  * Select the version set as current from a list of api_versions <br/>
  * There should always be a single API version set as current, so this function always
@@ -10,20 +13,18 @@ const { NoCurrentVersionError, SpecParsingError } = require('./errors');
 function getCurrentVersion(versions) {
     const current = versions.find((element) => element.current === true);
     if (current === undefined) {
-        throw new NoCurrentVersionError('No version is marked as current. That should be impossible!');
+        throw new errors_js_1.NoCurrentVersionError('No version is marked as current. That should be impossible!');
     }
     else {
-        if (semverValid(current.name) != null) {
+        if ((0, semver_1.valid)(current.name) != null) {
             return {
                 name: current.name,
                 id: current.id
             };
         }
         else {
-            throw new SpecParsingError(`Not a valid version according to semver: ${current.name}`);
+            throw new errors_js_1.SpecParsingError(`Not a valid version according to semver: ${current.name}`);
         }
     }
 }
-module.exports = { getCurrentVersion };
-export {};
-//# sourceMappingURL=get_current_version.js.map
+exports.getCurrentVersion = getCurrentVersion;

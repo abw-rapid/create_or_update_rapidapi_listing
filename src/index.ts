@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
-require('dotenv').config()
+import dotenv from 'dotenv'
+dotenv.config()
 
-const { alreadyExists } = require('./already_exists')
-const { apiVersionFromSpec, apiNameFromSpec } = require('./parse_spec')
-const { createApiVersion } = require('./create_api_version')
-const { createNewListing } = require('./create_new_listing')
-const { getCurrentApiVersion } = require('./get_current_api_version')
-const { graphqlHeaders } = require('./headers')
-const { readSpec } = require('./read_spec')
-const { updateApiVersion } = require('./update_api_version')
+import { alreadyExists } from './already_exists.js'
+import { apiVersionFromSpec, apiNameFromSpec } from './parse_spec.js'
+import { createApiVersion } from './create_api_version.js'
+import { createNewListing } from './create_new_listing.js'
+import { getCurrentApiVersion } from './get_current_api_version.js'
+import { graphqlHeaders } from './headers.js'
+import { readSpec } from './read_spec.js'
+import { updateApiVersion } from './update_api_version.js'
 
 const core = require('@actions/core')
 const graphql = require('graphql-request')
@@ -29,7 +30,7 @@ async function main () {
   const spec = readSpec(specPath)
   const name = apiNameFromSpec(spec)
   const apiId = await alreadyExists(name, ownerId, client)
-  if (apiId != 0) {
+  if (apiId != "0") {
     // Provide some data about the API
     const currentVersion = await getCurrentApiVersion(apiId, client)
     const parsedCurrentVersion = currentVersion.name

@@ -1,4 +1,10 @@
-const fs = require('fs');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.readSpec = void 0;
+const fs_1 = __importDefault(require("fs"));
 /**
  * Return JSON string containing the contents of an OAS
  * @param {string} oas Path to OAS
@@ -6,7 +12,7 @@ const fs = require('fs');
  */
 function readSpec(oas) {
     try {
-        const spec = fs.readFileSync(oas);
+        const spec = fs_1.default.readFileSync(oas, "utf-8");
         try {
             return JSON.parse(spec);
         }
@@ -19,6 +25,4 @@ function readSpec(oas) {
         throw new Error('Could not read file: ' + oas);
     }
 }
-module.exports = { readSpec };
-export {};
-//# sourceMappingURL=read_spec.js.map
+exports.readSpec = readSpec;

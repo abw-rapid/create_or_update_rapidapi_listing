@@ -1,5 +1,5 @@
-const semverValid = require('semver/functions/valid')
-const { SpecParsingError } = require('./errors')
+import { valid } from 'semver'
+import { SpecParsingError } from './errors.js'
 
 /**
  * Return the version field of a spec file
@@ -10,7 +10,7 @@ function apiVersionFromSpec (spec) {
   if (spec.info.version === undefined) {
     throw new SpecParsingError("No property 'version' in spec")
   } else {
-    if (semverValid(spec.info.version)) {
+    if (valid(spec.info.version)) {
       return spec.info.version
     } else {
       throw new SpecParsingError(
@@ -46,8 +46,4 @@ function apiDescriptionFromSpec (spec) {
   }
 }
 
-module.exports = {
-  apiVersionFromSpec,
-  apiNameFromSpec,
-  apiDescriptionFromSpec
-}
+export { apiVersionFromSpec, apiNameFromSpec, apiDescriptionFromSpec }

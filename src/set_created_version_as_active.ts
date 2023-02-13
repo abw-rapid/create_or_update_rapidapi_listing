@@ -1,5 +1,5 @@
-const graphql = require('graphql-request')
-const { PlatformAPIError } = require('./errors')
+import { gql } from 'graphql-request'
+import { PlatformAPIError } from './errors.js'
 
 /**
  * Set the newly created version of the API as the current one
@@ -7,7 +7,7 @@ const { PlatformAPIError } = require('./errors')
  * @param {object} client The GraphQL Client object for reuse
  */
 async function setCreatedVersionAsActive (apiVersionId, client) {
-  const mutation = graphql.gql`
+  const mutation = gql`
         mutation updateApiVersions($apiVersions: [ApiVersionUpdateInput!]!) {
           updateApiVersions(apiVersions: $apiVersions) {
             id
@@ -32,4 +32,4 @@ async function setCreatedVersionAsActive (apiVersionId, client) {
   }
 }
 
-module.exports = { setCreatedVersionAsActive }
+export { setCreatedVersionAsActive }

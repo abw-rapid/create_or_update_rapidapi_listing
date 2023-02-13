@@ -1,0 +1,552 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/catalog/categories": {
+      "get": {
+        "operationId": "Get Categories",
+        "summary": "Get all the different product categories in the store",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Catalog"
+        ]
+      }
+    },
+    "/catalog/products": {
+      "get": {
+        "operationId": "Get Products",
+        "summary": "Get all products in the store",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "skip",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Catalog"
+        ]
+      }
+    },
+    "/catalog/category/{category}/products": {
+      "get": {
+        "operationId": "Get Products in Category",
+        "summary": "Get all products in a given category the store",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "skip",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "category",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Catalog"
+        ]
+      }
+    },
+    "/catalog/product/{id}": {
+      "get": {
+        "operationId": "Get Product",
+        "summary": "Get a single product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Catalog"
+        ]
+      },
+      "delete": {
+        "operationId": "Delete Product",
+        "summary": "Delete a product from the store",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Catalog"
+        ]
+      }
+    },
+    "/catalog/product": {
+      "post": {
+        "operationId": "Create Product",
+        "summary": "Create a new product in the store",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Catalog"
+        ]
+      }
+    },
+    "/order/new": {
+      "post": {
+        "operationId": "Create Order",
+        "summary": "Create a new Order from the store",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/order/{id}/product": {
+      "post": {
+        "operationId": "Add to Order",
+        "summary": "Add a product to your order",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProductToOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/order/{id}": {
+      "delete": {
+        "operationId": "Cancel Order",
+        "summary": "Cancel an existing order",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Order"
+        ]
+      },
+      "get": {
+        "operationId": "Get Order",
+        "summary": "Get order by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/order/{id}/product/{productId}": {
+      "delete": {
+        "operationId": "Delete from Order",
+        "summary": "Delete an order from your order",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/order/my": {
+      "get": {
+        "operationId": "Get User Orders",
+        "summary": "Get all orders placed by a user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Pass JWT token as baerer",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/order/{id}/place": {
+      "post": {
+        "operationId": "Place Order",
+        "summary": "Place order as a user",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Pass JWT token as baerer",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "Login",
+        "summary": "Authenticate to the API and get a JWT token for use with authenticated requests",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/user": {
+      "post": {
+        "operationId": "Create User (Sign Up)",
+        "summary": "Create a new user login in the API",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "Me",
+        "summary": "Get basic info about authenticated user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Pass JWT token as baerer",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Template API",
+    "x-category": "Other",
+    "x-long-description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sagittis at massa a rutrum. Ut sed tellus sed tellus dictum accumsan. Cras a dui viverra, lobortis leo et, mollis sem. Mauris bibendum dui finibus purus volutpat porta. Aliquam sed quam ut felis aliquet rhoncus aliquam et urna. Suspendisse potenti. Fusce sit amet arcu a sem laoreet tincidunt ut et tellus. Nulla viverra erat non diam sagittis dignissim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi fringilla risus vel ligula condimentum consequat. Vivamus eget velit lectus.",
+    "description": "An API to manage the product catalog and orders in my store. [Download OpenAPI 3.0 Spec](/-json). This API is open and may be used for demonstration / testing purposes. Data will be periodically wiped. [Download Paw Project](/My-Store-API.paw).",
+    "version": "1.0.4",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "https://mystoreapi.com"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "CreateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "price",
+          "manufacturer",
+          "category",
+          "description",
+          "tags"
+        ]
+      },
+      "CreateOrderDto": {
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer",
+          "address"
+        ]
+      },
+      "AddProductToOrderDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "productId",
+          "amount"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      }
+    }
+  },
+  "x-documentation": {
+    "readme": "Nulla mollis porttitor turpis, eu gravida risus sagittis eget. Aliquam ultrices viverra est, in posuere enim tristique et. Mauris nec fringilla ante, quis tristique ante. Donec mattis vitae nisi id volutpat. Nunc in nisl felis. Aenean sapien velit, dictum at dapibus sit amet, fringilla vel justo. Pellentesque sagittis urna a massa scelerisque, sit amet sodales lectus ultrices. Phasellus rutrum ac tellus sed ullamcorper.\n\nSed dapibus quis enim et viverra. Aliquam placerat felis vel nunc semper dapibus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam scelerisque diam tellus, a facilisis lectus dapibus et. Quisque in luctus diam, et facilisis arcu. Nam pulvinar imperdiet consectetur. Duis sit amet ipsum quam. Praesent dapibus ante metus, vel efficitur purus vulputate et. Morbi at vulputate nisi. Ut suscipit mattis augue sit amet malesuada.",
+    "tutorials": [
+      {
+        "title": "Another complicated topic",
+        "description": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla maximus ac ligula et aliquet. Donec odio eros, porttitor vitae dui vitae, imperdiet feugiat felis. Sed sed eros vel nisi rhoncus varius. Praesent ac arcu erat. In quam sapien, viverra faucibus maximus sit amet, finibus sed elit. Nunc vestibulum, metus at finibus efficitur, velit augue euismod ipsum, eu rhoncus sem mi ac enim. Nam consequat, erat malesuada sagittis lobortis, mi turpis ullamcorper augue, in cursus nibh arcu non felis. Vivamus vehicula, enim sed consequat eleifend, neque leo dignissim felis, ac porta tortor ligula id neque. Proin sollicitudin, nisi non sollicitudin molestie, purus turpis posuere felis, ac vulputate sem orci sit amet nulla. Morbi eros ligula, varius a ante sed, dictum finibus sapien. Morbi ut molestie turpis. Suspendisse potenti. Fusce id nibh dictum, vulputate quam ac, lacinia orci. Nulla neque augue, aliquet et facilisis ac, ornare non arcu. Nam in tincidunt ipsum.\n\nCras tincidunt nunc ut ultricies sodales. Proin tortor ante, tincidunt et erat a, sagittis rhoncus dolor. Nam dignissim vehicula convallis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer at est non enim tincidunt luctus. Donec ut efficitur diam. Nam quis orci consectetur, rutrum elit sed, pharetra neque. Sed porttitor ornare orci eget pellentesque. Phasellus tincidunt tincidunt tempor. Vestibulum in feugiat nunc. Sed pellentesque ligula eget lorem semper tincidunt. Nulla facilisi. Morbi consequat orci augue, quis fermentum elit varius eu. Vestibulum feugiat urna quis sem convallis feugiat. Nulla consequat purus id mollis suscipit.",
+        "link": "https://thumbs.dreamstime.com/b/complicated-problems-stress-women-105764830.jpg"
+      },
+      {
+        "title": "This is a tutorial about something complicated",
+        "description": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla maximus ac ligula et aliquet. Donec odio eros, porttitor vitae dui vitae, imperdiet feugiat felis. Sed sed eros vel nisi rhoncus varius. Praesent ac arcu erat. In quam sapien, viverra faucibus maximus sit amet, finibus sed elit. Nunc vestibulum, metus at finibus efficitur, velit augue euismod ipsum, eu rhoncus sem mi ac enim. Nam consequat, erat malesuada sagittis lobortis, mi turpis ullamcorper augue, in cursus nibh arcu non felis. Vivamus vehicula, enim sed consequat eleifend, neque leo dignissim felis, ac porta tortor ligula id neque. Proin sollicitudin, nisi non sollicitudin molestie, purus turpis posuere felis, ac vulputate sem orci sit amet nulla. Morbi eros ligula, varius a ante sed, dictum finibus sapien. Morbi ut molestie turpis. Suspendisse potenti. Fusce id nibh dictum, vulputate quam ac, lacinia orci. Nulla neque augue, aliquet et facilisis ac, ornare non arcu. Nam in tincidunt ipsum.\n\nCras tincidunt nunc ut ultricies sodales. Proin tortor ante, tincidunt et erat a, sagittis rhoncus dolor. Nam dignissim vehicula convallis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer at est non enim tincidunt luctus. Donec ut efficitur diam. Nam quis orci consectetur, rutrum elit sed, pharetra neque. Sed porttitor ornare orci eget pellentesque. Phasellus tincidunt tincidunt tempor. Vestibulum in feugiat nunc. Sed pellentesque ligula eget lorem semper tincidunt. Nulla facilisi. Morbi consequat orci augue, quis fermentum elit varius eu. Vestibulum feugiat urna quis sem convallis feugiat. Nulla consequat purus id mollis suscipit.",
+        "link": "https://thumbs.dreamstime.com/b/complicated-road-beginning-winding-60128836.jpg"
+      }
+    ],
+    "spotlights": [
+      {
+        "title": "RapidAPI",
+        "description": "RapidAPI Homepage",
+        "link": "https://rapidapi.com"
+      },
+      {
+        "title": "GitHub Repo",
+        "description": "Our GitHub repo",
+        "link": "https://github.com"
+      }
+    ]
+  }
+}
+

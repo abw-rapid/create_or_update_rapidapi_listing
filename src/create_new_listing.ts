@@ -1,9 +1,9 @@
-const axios = require('axios')
-const FormData = require('form-data')
-const fs = require('fs')
-const core = require('@actions/core')
-const { PlatformAPIError, UnexpectedStatusError } = require('./errors')
-const { formGraphqlHeaders } = require('./headers')
+import axios from 'axios'
+import FormData from 'form-data'
+import fs from 'fs'
+import * as core from '@actions/core'
+import { PlatformAPIError, UnexpectedStatusError } from './errors.js'
+import { formGraphqlHeaders } from './headers.js'
 
 /**
  * Creates a new API listing on the RapidAPI (Enterprise) Hub
@@ -59,4 +59,4 @@ async function createNewListing (specPath) {
   }
 }
 
-module.exports = { createNewListing }
+export { createNewListing }

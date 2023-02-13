@@ -1,9 +1,9 @@
-const axios = require('axios')
-const fs = require('fs')
-const FormData = require('form-data')
-const core = require('@actions/core')
-const { formGraphqlHeaders } = require('./headers')
-const { SpecParsingError, UnexpectedStatusError } = require('./errors')
+import axios from 'axios'
+import fs from 'fs'
+import FormData from 'form-data'
+import * as core from '@actions/core'
+import { formGraphqlHeaders } from './headers.js'
+import { SpecParsingError, UnexpectedStatusError } from './errors.js'
 
 /**
  * Creates and returns a new API version for a given API
@@ -65,4 +65,4 @@ async function updateApiVersion (specPath, apiVersionId) {
   }
 }
 
-module.exports = { updateApiVersion }
+export { updateApiVersion }
