@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from "@jest/types"
+
+const config: Config.InitialOptions = {
   setupFiles: [
     '<rootDir>/tests/dotenv-config.js'
   ],
@@ -8,7 +10,9 @@ module.exports = {
   testMatch: ['<rootDir>/tests/*.test.ts'],
   silent: false,
   collectCoverageFrom: [
-    'main/*.ts',
-    '!main/errors.ts'
+    'src/*.ts',
+    '!src/errors.ts'
   ]
 }
+
+export default config
