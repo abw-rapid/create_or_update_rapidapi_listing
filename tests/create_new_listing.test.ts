@@ -1,6 +1,6 @@
-const { createNewListing } = require('../src/create_new_listing')
-const nock = require('nock')
-const fs = require('fs')
+import { createNewListing } from '../src/create_new_listing'
+import * as nock from 'nock'
+import * as fs from 'fs'
 
 const contents = JSON.stringify({
   openapi: '3.0.0',
@@ -16,7 +16,7 @@ const res = 'testId'
 test('handling create_new_listing reponse', async () => {
   const mockRead = jest
     .spyOn(fs, 'readFileSync')
-    .mockImplementation((filename) => contents)
+    .mockImplementation(((filename: string) => contents) as typeof fs.readFileSync)
   nock('https://platform-graphql.p.rapidapi.com')
     .post('/')
     .reply(200, {

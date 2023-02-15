@@ -1,9 +1,9 @@
 import axios from 'axios'
-import fs from 'fs'
-import FormData from 'form-data'
+import * as fs from 'fs'
+import FormData = require('form-data')
 import * as core from '@actions/core'
-import { formGraphqlHeaders } from './headers.js'
-import { SpecParsingError, UnexpectedStatusError } from './errors.js'
+const { formGraphqlHeaders } = require('../src/headers')
+const { SpecParsingError, UnexpectedStatusError } = require('../src/errors')
 
 /**
  * Creates and returns a new API version for a given API
@@ -12,7 +12,7 @@ import { SpecParsingError, UnexpectedStatusError } from './errors.js'
  * @param {object} client The GraphQL Client object for reuse
  * @returns {string} The id of the newly created API version
  */
-async function updateApiVersion (specPath, apiVersionId) {
+async function updateApiVersion (specPath: string, apiVersionId: string) {
   const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true })
   const query = `
         mutation updateApisFromRapidOas($updates: [ApiUpdateFromRapidOasInput!]!) {
@@ -56,7 +56,7 @@ async function updateApiVersion (specPath, apiVersionId) {
     // this happens when an unknown collection is part of the spec; we get a 200, but
     // also an unprocessable_entity error :/
     let errorMessage = new Array()
-    res.data.errors.forEach((value) => errorMessage.push(value.message))
+    res.data.errors.forEach((value: { message: string }) => errorMessage.push(value.message))
     throw new SpecParsingError(`Error parsing spec: ${errorMessage}`)
   } else {
     throw new UnexpectedStatusError(

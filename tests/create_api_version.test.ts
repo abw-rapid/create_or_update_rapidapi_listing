@@ -1,6 +1,6 @@
-const { createApiVersion } = require('../src/create_api_version')
-const nock = require('nock')
-const graphql = require('graphql-request')
+import { createApiVersion } from '../src/create_api_version'
+import * as nock from 'nock'
+import * as graphql from 'graphql-request'
 
 afterEach(() => {
   jest.restoreAllMocks()
@@ -25,3 +25,5 @@ test('handling update_api_version reponse', async () => {
     'the_id_we_are_looking_for'
   )
 })
+
+export {}

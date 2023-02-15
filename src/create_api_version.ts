@@ -1,5 +1,5 @@
 import { gql } from 'graphql-request'
-import { UnexpectedResponseError } from './errors.js'
+import { UnexpectedResponseError } from './errors'
 import { inspect } from 'util'
 
 /**
@@ -9,7 +9,7 @@ import { inspect } from 'util'
  * @param {object} client The GraphQL Client object for reuse
  * @returns {string} The id of the newly created API version
  */
-async function createApiVersion (name, api, client) {
+async function createApiVersion (name: string, api: string, client: any): Promise<string> {
   const mutation = gql`
     mutation createApiVersions($apiVersions: [ApiVersionCreateInput!]!) {
         createApiVersions(apiVersions: $apiVersions) {

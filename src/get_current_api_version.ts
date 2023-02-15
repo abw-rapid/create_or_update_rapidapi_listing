@@ -1,6 +1,6 @@
 import { gql } from 'graphql-request'
-import { getCurrentVersion } from './get_current_version.js'
-import { NoCurrentVersionError } from './errors.js'
+import { getCurrentVersion } from './get_current_version'
+import { NoCurrentVersionError } from './errors'
 
 /**
  * Fetch the id of the latest version of an API
@@ -8,7 +8,7 @@ import { NoCurrentVersionError } from './errors.js'
  * @param {object} client The GraphQL Client object for reuse
  * @return {object} An object containing the name and id of the latest version of this API
  */
-async function getCurrentApiVersion (apiId, client) {
+async function getCurrentApiVersion (apiId: string, client: any) {
   const query = gql`
     query apiVersions($where: ApiVersionWhereInput) {
         apiVersions(where: $where) {
