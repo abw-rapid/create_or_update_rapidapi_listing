@@ -6,7 +6,7 @@ module.exports = {
   extends: 'standard-with-typescript',
   overrides: [
     {
-      files: ['*.ts'],
+      files: ['tests/*.ts', 'src/*.ts'],
       parserOptions: {
         project: ['./tsconfig.json']
       }
