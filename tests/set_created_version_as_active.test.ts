@@ -23,3 +23,5 @@ test('handling set_created_version_as_active reponse', async () => {
     await setCreatedVersionAsActive('api_version_id', c)
   ).toBeUndefined()
 })
+
+export {}

@@ -1,5 +1,5 @@
 import { createApiVersion } from '../src/create_api_version'
-import * as nock from 'nock'
+import nock = require('nock')
 import * as graphql from 'graphql-request'
 
 afterEach(() => {

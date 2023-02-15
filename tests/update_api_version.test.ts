@@ -34,3 +34,5 @@ test('handling update_api_version reponse', async () => {
   ).toEqual(200)
   mockRead.mockRestore()
 })
+
+export {}

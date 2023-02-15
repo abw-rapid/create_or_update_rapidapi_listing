@@ -1,5 +1,5 @@
 import { createNewListing } from '../src/create_new_listing'
-import * as nock from 'nock'
+import nock = require('nock')
 import * as fs from 'fs'
 
 const contents = JSON.stringify({
@@ -35,3 +35,5 @@ test('handling create_new_listing reponse', async () => {
   )
   mockRead.mockRestore()
 })
+
+export {}
