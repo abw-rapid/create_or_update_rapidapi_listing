@@ -6,6 +6,7 @@ import { PlatformAPIError } from './errors'
  * @param {string} api_version_id
  * @param {object} client The GraphQL Client object for reuse
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function setCreatedVersionAsActive (apiVersionId: string, client: any): Promise<boolean> {
   const mutation = gql`
         mutation updateApiVersions($apiVersions: [ApiVersionUpdateInput!]!) {

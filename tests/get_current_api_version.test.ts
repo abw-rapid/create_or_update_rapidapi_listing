@@ -52,10 +52,12 @@ test('test formatting of graphql query for current version', async () => {
   type mockRequestSpy = (
     document: g.RequestDocument,
     variables: g.Variables
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>
 
   const c = new g.GraphQLClient(env.INPUT_GRAPHQL_URL)
   const mockRequest = c.request as unknown as jest.MockedFunction<mockRequestSpy>
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mockRequest.mockImplementation(async (document: g.RequestDocument, variables: g.Variables) => {
     return versionList
   })

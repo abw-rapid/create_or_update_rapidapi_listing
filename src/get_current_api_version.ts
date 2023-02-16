@@ -8,6 +8,7 @@ import { apiVersion } from './types'
  * @param {object} client The GraphQL Client object for reuse
  * @return {object} An object containing the name and id of the latest version of this API
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getCurrentApiVersion (apiId: string, client: any): Promise<apiVersion> {
   const query = `
     query apiVersions($where: ApiVersionWhereInput) {

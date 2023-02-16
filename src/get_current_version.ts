@@ -9,7 +9,9 @@ import { apiVersion } from './types'
  * @param {array} versions List of version objects
  * @return {object} An object containing the name and id of the latest version of this API
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getCurrentVersion (versions: any): apiVersion {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const current = versions.find((element: any) => element.current === true)
   if (current === undefined) {
     throw new NoCurrentVersionError(

@@ -6,6 +6,7 @@ import { SpecParsingError } from './errors'
  * @param {object} spec The contents of a spec file (valid json)
  * @returns {string} The contents of the version field in the info block
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function apiVersionFromSpec (spec: any): string {
   if (spec.info.version === undefined) {
     throw new SpecParsingError("No property 'version' in spec")
@@ -26,6 +27,7 @@ function apiVersionFromSpec (spec: any): string {
  * @param {string} spec The contents of a spec file (valid json)
  * @returns {string} The contents of the title field in the info block
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function apiNameFromSpec (spec: any): string {
   if (spec.info.title === undefined) {
     throw new SpecParsingError("No property 'title' in spec")
@@ -39,6 +41,7 @@ function apiNameFromSpec (spec: any): string {
  * @param {string} spec The contents of a spec file (valid json)
  * @returns {string} The contents of the description field in the info block
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function apiDescriptionFromSpec (spec: any): string {
   if (spec.info.description === undefined) {
     throw new SpecParsingError("No property 'description' in spec")

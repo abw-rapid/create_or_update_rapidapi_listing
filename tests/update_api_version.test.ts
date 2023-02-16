@@ -24,6 +24,7 @@ const res = {
 test('handling update_api_version reponse', async () => {
   const mockRead = jest
     .spyOn(fs, 'readFileSync')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .mockImplementation((filename) => contents)
   nock('https://platform-graphql.p.rapidapi.com').post('/').reply(200, res)
   expect(
