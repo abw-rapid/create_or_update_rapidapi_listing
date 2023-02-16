@@ -1,6 +1,6 @@
 {
   "name": "create_or_update_rapidapi_listing",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "GitHub Action to create or update an API on RapidAPI",
   "main": "index.js",
   "scripts": {
