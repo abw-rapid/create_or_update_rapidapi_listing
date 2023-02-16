@@ -67,9 +67,9 @@ async function main (): Promise<void> {
     }
     core.setOutput('api_id', apiId)
   } else {
+    console.log('=> This is a new API')
     const newApi = await createNewListing(specPath)
     const initialVersion = await getCurrentApiVersion(newApi, client)
-    console.log('=> This is a new API')
     console.log('   New api id: ' + newApi)
     console.log('   Initial version id: ' + initialVersion.id)
 
