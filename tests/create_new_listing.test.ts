@@ -16,6 +16,7 @@ const res = 'testId'
 test('handling create_new_listing reponse', async () => {
   const mockRead = jest
     .spyOn(fs, 'readFileSync')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .mockImplementation(((filename: string) => contents) as typeof fs.readFileSync)
   nock('https://platform-graphql.p.rapidapi.com')
     .post('/')

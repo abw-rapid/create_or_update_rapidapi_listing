@@ -13,6 +13,7 @@ const contents = JSON.stringify({
 test('read a spec file into memory', () => {
   const mockRead = jest
     .spyOn(fs, 'readFileSync')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .mockImplementation(((filename: string) => contents) as typeof fs.readFileSync)
   expect(readSpec('/home/someuser/test_spec.json')).toStrictEqual(
     JSON.parse(contents)

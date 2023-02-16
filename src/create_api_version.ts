@@ -9,6 +9,7 @@ import { inspect } from 'util'
  * @param {object} client The GraphQL Client object for reuse
  * @returns {string} The id of the newly created API version
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function createApiVersion (name: string, api: string, client: any): Promise<string> {
   const mutation = gql`
     mutation createApiVersions($apiVersions: [ApiVersionCreateInput!]!) {
