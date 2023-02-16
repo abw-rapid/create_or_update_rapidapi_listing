@@ -1,5 +1,6 @@
 import { valid } from 'semver'
 import { NoCurrentVersionError, SpecParsingError } from './errors'
+import { apiVersion } from './types'
 
 /**
  * Select the version set as current from a list of api_versions <br/>
@@ -8,7 +9,7 @@ import { NoCurrentVersionError, SpecParsingError } from './errors'
  * @param {array} versions List of version objects
  * @return {object} An object containing the name and id of the latest version of this API
  */
-function getCurrentVersion (versions: any) {
+function getCurrentVersion (versions: any): apiVersion {
   const current = versions.find((element: any) => element.current === true)
   if (current === undefined) {
     throw new NoCurrentVersionError(
@@ -21,8 +22,9 @@ function getCurrentVersion (versions: any) {
         id: current.id
       }
     } else {
+      const brokenVersion = current.name as string
       throw new SpecParsingError(
-                `Not a valid version according to semver: ${current.name}`
+                `Not a valid version according to semver: ${brokenVersion}`
       )
     }
   }

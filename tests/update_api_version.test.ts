@@ -1,6 +1,6 @@
-const { updateApiVersion } = require('../src/update_api_version')
-const nock = require('nock')
-const fs = require('fs')
+import { updateApiVersion } from '../src/update_api_version'
+import nock = require('nock')
+import * as fs from 'fs'
 
 afterEach(() => {
   jest.restoreAllMocks()

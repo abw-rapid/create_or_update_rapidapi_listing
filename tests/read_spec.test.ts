@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-const { readSpec } = require('../src/read_spec')
+import { readSpec } from '../src/read_spec'
 
 const contents = JSON.stringify({
   openapi: '3.0.0',

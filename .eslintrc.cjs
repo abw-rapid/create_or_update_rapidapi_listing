@@ -17,5 +17,6 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
+    '@typescript-eslint/restrict-template-expressions': 'error'
   }
 }

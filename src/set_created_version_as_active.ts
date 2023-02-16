@@ -6,7 +6,7 @@ import { PlatformAPIError } from './errors'
  * @param {string} api_version_id
  * @param {object} client The GraphQL Client object for reuse
  */
-async function setCreatedVersionAsActive (apiVersionId: string, client: any) {
+async function setCreatedVersionAsActive (apiVersionId: string, client: any): Promise<boolean> {
   const mutation = gql`
         mutation updateApiVersions($apiVersions: [ApiVersionUpdateInput!]!) {
           updateApiVersions(apiVersions: $apiVersions) {
@@ -27,8 +27,10 @@ async function setCreatedVersionAsActive (apiVersionId: string, client: any) {
 
   try {
     await client.request(mutation, variables)
+    return true
   } catch (err) {
-    throw new PlatformAPIError(`Platform API error: ${err}`)
+    const graphqlError = err as string
+    throw new PlatformAPIError(`Platform API error: ${graphqlError}`)
   }
 }
 

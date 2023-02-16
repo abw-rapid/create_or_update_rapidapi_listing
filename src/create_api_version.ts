@@ -31,8 +31,9 @@ async function createApiVersion (name: string, api: string, client: any): Promis
   try {
     const res = await client.request(mutation, params)
     if (res.errors !== undefined) {
+      const graphqlError = res.errors[0].messages as string
       throw new UnexpectedResponseError(
-                `Unable to create new API version: ${res.errors[0].message}`
+                `Unable to create new API version: ${graphqlError}`
       )
     } else {
       return res.createApiVersions[0].id

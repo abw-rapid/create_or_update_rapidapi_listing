@@ -1,4 +1,4 @@
-const { getCurrentVersion } = require('../src/get_current_version')
+import { getCurrentVersion } from '../src/get_current_version'
 
 const currentVersionList = [
   {

@@ -38561,7 +38561,7 @@ async function alreadyExists(name, ownerId, client) {
     };
     const data = await client.request(query, variables);
     if (data.apis.nodes.length === 0) {
-        return "0";
+        return '0';
     }
     else if (data.apis.nodes.length === 1) {
         return data.apis.nodes[0].id;
@@ -38612,7 +38612,8 @@ async function createApiVersion(name, api, client) {
     try {
         const res = await client.request(mutation, params);
         if (res.errors !== undefined) {
-            throw new errors_1.UnexpectedResponseError(`Unable to create new API version: ${res.errors[0].message}`);
+            const graphqlError = res.errors[0].messages;
+            throw new errors_1.UnexpectedResponseError(`Unable to create new API version: ${graphqlError}`);
         }
         else {
             return res.createApiVersions[0].id;
@@ -38711,7 +38712,8 @@ async function createNewListing(specPath) {
         }
     }
     catch (err) {
-        throw new errors_1.PlatformAPIError(`Platform API error: ${err}`);
+        const graphqlError = err;
+        throw new errors_1.PlatformAPIError(`Platform API error: ${graphqlError}`);
     }
 }
 exports.createNewListing = createNewListing;
@@ -38779,7 +38781,6 @@ exports.UnexpectedStatusError = UnexpectedStatusError;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getCurrentApiVersion = void 0;
-const graphql_request_1 = __nccwpck_require__(2476);
 const get_current_version_1 = __nccwpck_require__(6739);
 const errors_1 = __nccwpck_require__(79);
 /**
@@ -38789,7 +38790,7 @@ const errors_1 = __nccwpck_require__(79);
  * @return {object} An object containing the name and id of the latest version of this API
  */
 async function getCurrentApiVersion(apiId, client) {
-    const query = (0, graphql_request_1.gql) `
+    const query = `
     query apiVersions($where: ApiVersionWhereInput) {
         apiVersions(where: $where) {
           nodes {
@@ -38853,7 +38854,8 @@ function getCurrentVersion(versions) {
             };
         }
         else {
-            throw new errors_1.SpecParsingError(`Not a valid version according to semver: ${current.name}`);
+            const brokenVersion = current.name;
+            throw new errors_1.SpecParsingError(`Not a valid version according to semver: ${brokenVersion}`);
         }
     }
 }
@@ -38930,53 +38932,76 @@ exports.graphqlHeaders = graphqlHeaders;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const already_exists_1 = __nccwpck_require__(6587);
+const parse_spec_1 = __nccwpck_require__(1740);
+const create_api_version_1 = __nccwpck_require__(9728);
+const create_new_listing_1 = __nccwpck_require__(6825);
+const get_current_api_version_1 = __nccwpck_require__(3937);
+const headers_1 = __nccwpck_require__(6767);
+const read_spec_1 = __nccwpck_require__(2425);
+const update_api_version_1 = __nccwpck_require__(8168);
 const dotenv_1 = __importDefault(__nccwpck_require__(2437));
+const core = __importStar(__nccwpck_require__(2186));
+const g = __importStar(__nccwpck_require__(2476));
+const semver_1 = __importDefault(__nccwpck_require__(1383));
 dotenv_1.default.config();
-const already_exists_js_1 = __nccwpck_require__(6587);
-const parse_spec_js_1 = __nccwpck_require__(1740);
-const create_api_version_js_1 = __nccwpck_require__(9728);
-const create_new_listing_js_1 = __nccwpck_require__(6825);
-const get_current_api_version_js_1 = __nccwpck_require__(3937);
-const headers_js_1 = __nccwpck_require__(6767);
-const read_spec_js_1 = __nccwpck_require__(2425);
-const update_api_version_js_1 = __nccwpck_require__(8168);
-const core = __nccwpck_require__(2186);
-const graphql = __nccwpck_require__(2476);
-const semver = __nccwpck_require__(1383);
 async function main() {
     const specPath = core.getInput('SPEC_PATH', { required: true });
     const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true });
     const ownerId = core.getInput('OWNER_ID', { required: true });
     // We're making two to three API calls to the GraphQL PAPI with the same headers, so
     // let's re-use a single client object
-    const client = new graphql.GraphQLClient(graphqlUrl, {
-        headers: (0, headers_js_1.graphqlHeaders)()
+    const client = new g.GraphQLClient(graphqlUrl, {
+        headers: Object.assign((0, headers_1.graphqlHeaders)())
     });
-    const spec = (0, read_spec_js_1.readSpec)(specPath);
-    const name = (0, parse_spec_js_1.apiNameFromSpec)(spec);
-    const apiId = await (0, already_exists_js_1.alreadyExists)(name, ownerId, client);
-    if (apiId != "0") {
+    const spec = (0, read_spec_1.readSpec)(specPath);
+    const name = (0, parse_spec_1.apiNameFromSpec)(spec);
+    const apiId = await (0, already_exists_1.alreadyExists)(name, parseInt(ownerId), client);
+    if (apiId !== '0') {
         // Provide some data about the API
-        const currentVersion = await (0, get_current_api_version_js_1.getCurrentApiVersion)(apiId, client);
+        const currentVersion = await (0, get_current_api_version_1.getCurrentApiVersion)(apiId, client);
         const parsedCurrentVersion = currentVersion.name;
-        const parsedSpecVersion = (0, parse_spec_js_1.apiVersionFromSpec)(spec);
+        const parsedSpecVersion = (0, parse_spec_1.apiVersionFromSpec)(spec);
         console.log('=> This is an existing API');
-        console.log('  The API id is:   ' + apiId);
-        console.log('  Version on Hub:  ' + parsedCurrentVersion);
-        console.log('  Version in spec: ' + parsedSpecVersion);
+        console.log(`  The API id is: ${apiId}`);
+        console.log(`  Version on Hub: ${parsedCurrentVersion}`);
+        console.log(`  Version in spec: ${parsedSpecVersion}`);
         // Only create a new API version if the provided spec's version is higher than
         // the version already on the Hub
-        const specIsNewer = semver.gt(parsedSpecVersion, parsedCurrentVersion);
-        console.log('=> Uploaded spec is newer: ' + specIsNewer);
+        const specIsNewer = semver_1.default.gt(parsedSpecVersion, parsedCurrentVersion);
+        console.log('=> Uploaded spec is newer: ' + String(specIsNewer));
         if (specIsNewer) {
             console.log('   Creating new API version in Hub...');
-            const newVersionId = await (0, create_api_version_js_1.createApiVersion)(parsedSpecVersion, apiId, client);
+            const newVersionId = await (0, create_api_version_1.createApiVersion)(parsedSpecVersion, apiId, client);
             console.log('   => New version id: ' + newVersionId);
-            await (0, update_api_version_js_1.updateApiVersion)(specPath, newVersionId);
+            await (0, update_api_version_1.updateApiVersion)(specPath, newVersionId);
             console.log('   Successfully uploaded new API version into the Hub!');
             // Set output variables for re-use in later actions, if need be
             core.setOutput('api_id', apiId);
@@ -38990,8 +39015,8 @@ async function main() {
         core.setOutput('api_id', apiId);
     }
     else {
-        const newApi = await (0, create_new_listing_js_1.createNewListing)(specPath);
-        const initialVersion = await (0, get_current_api_version_js_1.getCurrentApiVersion)(newApi, client);
+        const newApi = await (0, create_new_listing_1.createNewListing)(specPath);
+        const initialVersion = await (0, get_current_api_version_1.getCurrentApiVersion)(newApi, client);
         console.log('=> This is a new API');
         console.log('   New api id: ' + newApi);
         console.log('   Initial version id: ' + initialVersion.id);
@@ -39001,7 +39026,9 @@ async function main() {
         core.setOutput('api_version_id', initialVersion.id);
     }
 }
-main().catch((error) => console.error(error));
+main().catch((error) => {
+    console.error(error);
+});
 
 
 /***/ }),
@@ -39025,11 +39052,12 @@ function apiVersionFromSpec(spec) {
         throw new errors_1.SpecParsingError("No property 'version' in spec");
     }
     else {
-        if ((0, semver_1.valid)(spec.info.version)) {
+        if ((0, semver_1.valid)(spec.info.version) != null) {
             return spec.info.version;
         }
         else {
-            throw new errors_1.SpecParsingError(`Not a valid version according to semver: ${spec.info.version}`);
+            const brokenVersion = spec.info.version;
+            throw new errors_1.SpecParsingError(`Not a valid version according to semver: ${brokenVersion}`);
         }
     }
 }
@@ -39159,8 +39187,8 @@ const axios_1 = __importDefault(__nccwpck_require__(8757));
 const fs = __importStar(__nccwpck_require__(7147));
 const FormData = __nccwpck_require__(4334);
 const core = __importStar(__nccwpck_require__(2186));
-const { formGraphqlHeaders } = __nccwpck_require__(6767);
-const { SpecParsingError, UnexpectedStatusError } = __nccwpck_require__(79);
+const headers_1 = __nccwpck_require__(6767);
+const errors_1 = __nccwpck_require__(79);
 /**
  * Creates and returns a new API version for a given API
  * @param {*} version_name Version name or number for the new API version
@@ -39193,24 +39221,24 @@ async function updateApiVersion(specPath, apiVersionId) {
     const options = {
         method: 'POST',
         url: graphqlUrl,
-        headers: Object.assign(formGraphqlHeaders(), fd.getHeaders()),
+        headers: Object.assign((0, headers_1.formGraphqlHeaders)(), fd.getHeaders()),
         data: fd
     };
     const res = await axios_1.default.request(options);
-    if (res.status === 200 && !res.data.errors) {
+    if (res.status === 200 && res.data.errors === undefined) {
         return res.status;
     }
     else if (res.status === 200 &&
-        res.data.errors &&
+        res.data.errors !== undefined &&
         typeof res.data.errors === 'object') {
         // this happens when an unknown collection is part of the spec; we get a 200, but
         // also an unprocessable_entity error :/
-        let errorMessage = new Array();
+        const errorMessage = [];
         res.data.errors.forEach((value) => errorMessage.push(value.message));
-        throw new SpecParsingError(`Error parsing spec: ${errorMessage}`);
+        throw new errors_1.SpecParsingError(`Error parsing spec: ${errorMessage.toString()}`);
     }
     else {
-        throw new UnexpectedStatusError(`HTTP status is not 200, but ${res.status}`);
+        throw new errors_1.UnexpectedStatusError(`HTTP status is not 200, but ${res.status}`);
     }
 }
 exports.updateApiVersion = updateApiVersion;

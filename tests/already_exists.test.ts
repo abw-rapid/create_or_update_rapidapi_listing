@@ -1,7 +1,6 @@
-import { expect, jest, test } from '@jest/globals'
-const { alreadyExists } = require('../src/already_exists')
 import * as g from 'graphql-request'
 import { env } from 'process'
+import { alreadyExists } from '../src/already_exists'
 
 const returnDataOne = `{
     "apis": {

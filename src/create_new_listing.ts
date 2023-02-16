@@ -55,7 +55,8 @@ async function createNewListing (specPath: string): Promise<string> {
       )
     }
   } catch (err) {
-    throw new PlatformAPIError(`Platform API error: ${err}`)
+    const graphqlError = err as string
+    throw new PlatformAPIError(`Platform API error: ${graphqlError}`)
   }
 }
 
