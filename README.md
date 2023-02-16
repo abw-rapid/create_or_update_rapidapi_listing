@@ -101,9 +101,18 @@ steps:
 
 ### Limitations
 
-- You can only use this Action with APIs you own, either through personal or team crdentials.
+- You can only use this Action with APIs you own, either through personal or team credentials.
 - There is no check to verify whether the `owner_id`, `x-rapidapi-identity-key` and the
   `x-rapidapi-key` belong together.
 - There is no check whether an `x-rapidapi-identity-key` is required (in other words:
   whether or not the `x-rapidapi-key` belongs to a team).
-- There is no support for `on-behalf-of`.
+- There is no support for `on-behalf-of` (which is a limitation of the GraphQL PAPI at
+- the moment).
+- Currently, the comparison that is done to figure out whether an API version already
+    exists, is based on the currently active API version only. This results in the
+    following behavior. If you have an API version that is active, like 1.0.1, and try
+    and upload a new version 1.0.2, that new version will be a draft. If you then again
+    upload an 1.0.2 version, the Action will only see the currently active version
+    (1.0.1 in this case) and thus will try to create a new API version named 1.0.2. That
+    will fail, for obvious reasons (as it already exists, in case it wasn't obvious).
+    This is being worked on.

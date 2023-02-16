@@ -1,9 +1,9 @@
-const axios = require('axios')
-const FormData = require('form-data')
-const fs = require('fs')
-const core = require('@actions/core')
-const { PlatformAPIError, UnexpectedStatusError } = require('./errors')
-const { formGraphqlHeaders } = require('./headers')
+import axios from 'axios'
+import FormData = require('form-data')
+import * as fs from 'fs'
+import * as core from '@actions/core'
+import { PlatformAPIError, UnexpectedStatusError } from './errors'
+import { formGraphqlHeaders } from './headers'
 
 /**
  * Creates a new API listing on the RapidAPI (Enterprise) Hub
@@ -11,7 +11,7 @@ const { formGraphqlHeaders } = require('./headers')
  * @param {string} filename Filename of the OAS to be uploaded
  * @return {string} The id of the newly created API
  */
-async function createNewListing (specPath) {
+async function createNewListing (specPath: string): Promise<string> {
   const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true })
 
   const query = `
@@ -28,7 +28,7 @@ async function createNewListing (specPath) {
     }
   }
 
-  const creationsFile = fs.readFileSync(specPath)
+  const creationsFile = fs.readFileSync(specPath, 'utf-8')
 
   const fd = new FormData()
   fd.append('operations', JSON.stringify({ query, variables }))
@@ -55,8 +55,9 @@ async function createNewListing (specPath) {
       )
     }
   } catch (err) {
-    throw new PlatformAPIError(`Platform API error: ${err}`)
+    const graphqlError = err as string
+    throw new PlatformAPIError(`Platform API error: ${graphqlError}`)
   }
 }
 
-module.exports = { createNewListing }
+export { createNewListing }

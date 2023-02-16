@@ -1,9 +1,9 @@
-const axios = require('axios')
-const fs = require('fs')
-const FormData = require('form-data')
-const core = require('@actions/core')
-const { formGraphqlHeaders } = require('./headers')
-const { SpecParsingError, UnexpectedStatusError } = require('./errors')
+import axios from 'axios'
+import * as fs from 'fs'
+import FormData = require('form-data')
+import * as core from '@actions/core'
+import { formGraphqlHeaders } from '../src/headers'
+import { SpecParsingError, UnexpectedStatusError } from '../src/errors'
 
 /**
  * Creates and returns a new API version for a given API
@@ -12,7 +12,7 @@ const { SpecParsingError, UnexpectedStatusError } = require('./errors')
  * @param {object} client The GraphQL Client object for reuse
  * @returns {string} The id of the newly created API version
  */
-async function updateApiVersion (specPath, apiVersionId) {
+async function updateApiVersion (specPath: string, apiVersionId: string): Promise<number> {
   const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true })
   const query = `
         mutation updateApisFromRapidOas($updates: [ApiUpdateFromRapidOasInput!]!) {
@@ -46,18 +46,18 @@ async function updateApiVersion (specPath, apiVersionId) {
   }
 
   const res = await axios.request(options)
-  if (res.status === 200 && !res.data.errors) {
-    return res.status
+  if (res.status === 200 && res.data.errors === undefined) {
+    return res.status as number
   } else if (
     res.status === 200 &&
-        res.data.errors &&
+        res.data.errors !== undefined &&
         typeof res.data.errors === 'object'
   ) {
     // this happens when an unknown collection is part of the spec; we get a 200, but
     // also an unprocessable_entity error :/
-    const errorMessage = []
-    res.data.errors.forEach((value) => errorMessage.push(value.message))
-    throw new SpecParsingError(`Error parsing spec: ${errorMessage}`)
+    const errorMessage: string[] = []
+    res.data.errors.forEach((value: { message: string }) => errorMessage.push(value.message))
+    throw new SpecParsingError(`Error parsing spec: ${errorMessage.toString()}`)
   } else {
     throw new UnexpectedStatusError(
             `HTTP status is not 200, but ${res.status}`
@@ -65,4 +65,4 @@ async function updateApiVersion (specPath, apiVersionId) {
   }
 }
 
-module.exports = { updateApiVersion }
+export { updateApiVersion }

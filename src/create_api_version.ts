@@ -1,5 +1,6 @@
-const graphql = require('graphql-request')
-const { UnexpectedResponseError } = require('./errors')
+import { gql } from 'graphql-request'
+import { UnexpectedResponseError } from './errors'
+import { inspect } from 'util'
 
 /**
  * Creates and returns a new API version for a given API
@@ -8,11 +9,15 @@ const { UnexpectedResponseError } = require('./errors')
  * @param {object} client The GraphQL Client object for reuse
  * @returns {string} The id of the newly created API version
  */
-async function createApiVersion (name, api, client) {
-  const mutation = graphql.gql`
+async function createApiVersion (name: string, api: string, client: any): Promise<string> {
+  const mutation = gql`
     mutation createApiVersions($apiVersions: [ApiVersionCreateInput!]!) {
         createApiVersions(apiVersions: $apiVersions) {
             id
+            api
+            current
+            name
+            status
         }
     }`
 
@@ -26,16 +31,17 @@ async function createApiVersion (name, api, client) {
   try {
     const res = await client.request(mutation, params)
     if (res.errors !== undefined) {
+      const graphqlError = res.errors[0].messages as string
       throw new UnexpectedResponseError(
-                `Unable to create new API version: ${res.errors[0].message}`
+                `Unable to create new API version: ${graphqlError}`
       )
     } else {
       return res.createApiVersions[0].id
     }
   } catch (err) {
-    console.log(err)
+    console.log(inspect(err.response.errors))
     throw new Error('Unknown error in create_api_version')
   }
 }
 
-module.exports = { createApiVersion }
+export { createApiVersion }

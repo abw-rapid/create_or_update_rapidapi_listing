@@ -1,5 +1,8 @@
-const { getCurrentApiVersion } = require('../main/get_current_api_version')
-const graphql = require('graphql-request')
+import { getCurrentApiVersion } from '../src/get_current_api_version'
+import { env } from 'process'
+import * as g from 'graphql-request'
+
+jest.mock('graphql-request')
 
 afterEach(() => {
   jest.restoreAllMocks()
@@ -42,13 +45,23 @@ const result = [
 ]
 
 test('test formatting of graphql query for current version', async () => {
-  const c = new graphql.GraphQLClient()
-  const mockClient = jest
-    .spyOn(c, 'request')
-    .mockImplementation((query, variables) => versionList)
+  if (env.INPUT_GRAPHQL_URL === undefined) {
+    fail('The environment variable INPUT_GRAPHQL_URL is not set.')
+  }
+
+  type mockRequestSpy = (
+    document: g.RequestDocument,
+    variables: g.Variables
+  ) => Promise<any>
+
+  const c = new g.GraphQLClient(env.INPUT_GRAPHQL_URL)
+  const mockRequest = c.request as unknown as jest.MockedFunction<mockRequestSpy>
+  mockRequest.mockImplementation(async (document: g.RequestDocument, variables: g.Variables) => {
+    return versionList
+  })
   await getCurrentApiVersion(
     'api_8ef57cc9-aca9-427d-b643-7d9eec7b5712',
     c
   )
-  expect(mockClient.mock.calls).toEqual(result)
+  expect(mockRequest.mock.calls).toEqual(result)
 })

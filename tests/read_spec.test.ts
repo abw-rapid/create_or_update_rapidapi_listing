@@ -1,5 +1,5 @@
-const fs = require('fs')
-const { readSpec } = require('../main/read_spec')
+import * as fs from 'fs'
+import { readSpec } from '../src/read_spec'
 
 const contents = JSON.stringify({
   openapi: '3.0.0',
@@ -13,7 +13,7 @@ const contents = JSON.stringify({
 test('read a spec file into memory', () => {
   const mockRead = jest
     .spyOn(fs, 'readFileSync')
-    .mockImplementation((filename) => contents)
+    .mockImplementation(((filename: string) => contents) as typeof fs.readFileSync)
   expect(readSpec('/home/someuser/test_spec.json')).toStrictEqual(
     JSON.parse(contents)
   )

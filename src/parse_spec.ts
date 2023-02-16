@@ -1,20 +1,21 @@
-const semverValid = require('semver/functions/valid')
-const { SpecParsingError } = require('./errors')
+import { valid } from 'semver'
+import { SpecParsingError } from './errors'
 
 /**
  * Return the version field of a spec file
- * @param {string} spec The contents of a spec file
+ * @param {object} spec The contents of a spec file (valid json)
  * @returns {string} The contents of the version field in the info block
  */
-function apiVersionFromSpec (spec) {
+function apiVersionFromSpec (spec: any): string {
   if (spec.info.version === undefined) {
     throw new SpecParsingError("No property 'version' in spec")
   } else {
-    if (semverValid(spec.info.version)) {
+    if (valid(spec.info.version) != null) {
       return spec.info.version
     } else {
+      const brokenVersion = spec.info.version as string
       throw new SpecParsingError(
-                `Not a valid version according to semver: ${spec.info.version}`
+                `Not a valid version according to semver: ${brokenVersion}`
       )
     }
   }
@@ -22,10 +23,10 @@ function apiVersionFromSpec (spec) {
 
 /**
  * Return the name (title) field of a spec file
- * @param {string} spec The contents of a spec file
+ * @param {string} spec The contents of a spec file (valid json)
  * @returns {string} The contents of the title field in the info block
  */
-function apiNameFromSpec (spec) {
+function apiNameFromSpec (spec: any): string {
   if (spec.info.title === undefined) {
     throw new SpecParsingError("No property 'title' in spec")
   } else {
@@ -35,10 +36,10 @@ function apiNameFromSpec (spec) {
 
 /**
  * Return the description field of a spec file
- * @param {string} spec The contents of a spec file
+ * @param {string} spec The contents of a spec file (valid json)
  * @returns {string} The contents of the description field in the info block
  */
-function apiDescriptionFromSpec (spec) {
+function apiDescriptionFromSpec (spec: any): string {
   if (spec.info.description === undefined) {
     throw new SpecParsingError("No property 'description' in spec")
   } else {
@@ -46,8 +47,4 @@ function apiDescriptionFromSpec (spec) {
   }
 }
 
-module.exports = {
-  apiVersionFromSpec,
-  apiNameFromSpec,
-  apiDescriptionFromSpec
-}
+export { apiVersionFromSpec, apiNameFromSpec, apiDescriptionFromSpec }
