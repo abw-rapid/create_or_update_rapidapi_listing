@@ -12,7 +12,9 @@ const config: Config.InitialOptions = {
   collectCoverageFrom: [
     'tests/*.ts',
     'src/*.ts',
-    '!src/errors.ts'
+    '!src/errors.ts',
+    '!src/index.ts',
+    '!src/types.ts'
   ]
 }
 
