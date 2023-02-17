@@ -1,3 +1,5 @@
+import { SemVer } from 'semver'
+
 /* API types */
 export type apiResponseObject = {
   apis: apis
@@ -29,7 +31,7 @@ export type apiVersions = {
 
 export type apiVersion = {
   id: string
-  name: string
+  name: SemVer
   current?: boolean
   api?: string
   versionStatus?: apiVersionStatus

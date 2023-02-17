@@ -35,8 +35,8 @@ async function main (): Promise<void> {
     const parsedSpecVersion = apiVersionFromSpec(spec)
     console.log('=> This is an existing API')
     console.log(`  The API id is: ${apiId}`)
-    console.log(`  Version on Hub: ${parsedCurrentVersion}`)
-    console.log(`  Version in spec: ${parsedSpecVersion}`)
+    console.log(`  Version on Hub: ${parsedCurrentVersion.version}`)
+    console.log(`  Version in spec: ${parsedSpecVersion.version}`)
 
     // Only create a new API version if the provided spec's version is higher than
     // the version already on the Hub
@@ -49,7 +49,7 @@ async function main (): Promise<void> {
     if (specIsNewer) {
       console.log('   Creating new API version in Hub...')
       const newVersionId = await createApiVersion(
-        parsedSpecVersion,
+        parsedSpecVersion.version,
         apiId,
         client
       )

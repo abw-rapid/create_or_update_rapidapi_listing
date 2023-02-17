@@ -1,5 +1,4 @@
-import { valid } from 'semver'
-import { NoCurrentVersionError, SpecParsingError } from './errors'
+import { NoCurrentVersionError } from './errors'
 import { apiVersion, apiVersions } from './types'
 
 /**
@@ -18,17 +17,7 @@ function getCurrentVersion (versions: apiVersions): apiVersion {
       'No version is marked as current. That should be impossible!'
     )
   } else {
-    if (valid(current.name) != null) {
-      return {
-        name: current.name,
-        id: current.id
-      }
-    } else {
-      const brokenVersion = current.name as string
-      throw new SpecParsingError(
-                `Not a valid version according to semver: ${brokenVersion}`
-      )
-    }
+    return current
   }
 }
 

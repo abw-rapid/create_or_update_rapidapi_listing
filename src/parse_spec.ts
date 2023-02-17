@@ -1,4 +1,4 @@
-import { valid } from 'semver'
+import { parse, SemVer } from 'semver'
 import { SpecParsingError } from './errors'
 
 /**
@@ -7,12 +7,13 @@ import { SpecParsingError } from './errors'
  * @returns {string} The contents of the version field in the info block
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function apiVersionFromSpec (spec: any): string {
+function apiVersionFromSpec (spec: any): SemVer {
   if (spec.info.version === undefined) {
     throw new SpecParsingError("No property 'version' in spec")
   } else {
-    if (valid(spec.info.version) != null) {
-      return spec.info.version
+    const version = parse(spec.info.version)
+    if (version !== null) {
+      return version
     } else {
       const brokenVersion = spec.info.version as string
       throw new SpecParsingError(

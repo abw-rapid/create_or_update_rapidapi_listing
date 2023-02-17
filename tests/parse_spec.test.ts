@@ -1,7 +1,8 @@
+import { SemVer } from 'semver'
 import { apiVersionFromSpec, apiNameFromSpec, apiDescriptionFromSpec } from '../src/parse_spec'
 
 test('return the version of a spec file correctly', () => {
-  expect(apiVersionFromSpec(JSON.parse(mySpec))).toBe('1.0.1')
+  expect(apiVersionFromSpec(JSON.parse(mySpec))).toStrictEqual(new SemVer('1.0.1'))
 })
 
 test('return the name of an API correctly from an OAS', () => {
