@@ -1,23 +1,22 @@
 import { getCurrentVersion } from '../src/get_current_version'
+import { apiVersions, apiVersionStatus } from '../src/types'
 
-const currentVersionList = [
+const currentVersionList: apiVersions = {
+  'nodes': [
   {
     id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-ba02c06fbddb',
-    api: 'api_8ef57cc9-aca9-427d-b643-7d9eec7b5712',
-    current: true,
     name: '0.4.3',
-    status: 'ACTIVE',
-    versionStatus: 'active'
+    current: true,
+    versionStatus: apiVersionStatus.DRAFT
   },
   {
     id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-zzzzzzzzzzzz',
-    api: 'api_8ef57cc9-aca9-427d-b643-7d9eec7b5712',
-    current: false,
     name: '0.4.2',
-    status: 'ACTIVE',
-    versionStatus: 'active'
+    current: false,
+    versionStatus: apiVersionStatus.ACTIVE
   }
 ]
+}
 const expected = {
   id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-ba02c06fbddb',
   name: '0.4.3'

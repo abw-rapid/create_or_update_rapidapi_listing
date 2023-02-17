@@ -38,7 +38,6 @@ const result = [
     {
       where: {
         apiId: 'api_8ef57cc9-aca9-427d-b643-7d9eec7b5712',
-        versionStatus: 'ACTIVE'
       }
     }
   ]

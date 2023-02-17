@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request'
+import { apiResponseObject } from './types'
 
 /**
  * Checks whether an API already exists<br>
@@ -26,12 +27,15 @@ async function alreadyExists (name: string, ownerId: number, client: GraphQLClie
       ownerId
     }
   }
-  const data = await client.request(query, variables)
-  if (data.apis.nodes.length === 0) {
-    return '0'
-  } else if (data.apis.nodes.length === 1) {
-    return data.apis.nodes[0].id
+  const res: apiResponseObject = await client.request(query, variables)
+  const apis = res.apis
+  if (apis.nodes.length === 0) {
+    return '__not_found__'
+  } else if (apis.nodes.length === 1) {
+    const first_api = apis.nodes[0]
+    return first_api.id
   } else {
+    console.log(apis.nodes)
     throw new Error(`More than one API found with name ${name}; that shouldn't happen.`)
   }
 }

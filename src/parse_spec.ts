@@ -3,7 +3,7 @@ import { SpecParsingError } from './errors'
 
 /**
  * Return the version field of a spec file
- * @param {object} spec The contents of a spec file (valid json)
+ * @param {object} spec The contents of a spec file (parsed json object)
  * @returns {string} The contents of the version field in the info block
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

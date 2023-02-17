@@ -2,13 +2,13 @@ import axios from 'axios'
 import FormData = require('form-data')
 import * as fs from 'fs'
 import * as core from '@actions/core'
-import { PlatformAPIError, UnexpectedStatusError } from './errors'
+import { UnexpectedResponseError } from './errors'
 import { formGraphqlHeaders } from './headers'
 
 /**
  * Creates a new API listing on the RapidAPI (Enterprise) Hub
  *
- * @param {string} filename Filename of the OAS to be uploaded
+ * @param {string} specPath Filename of the OAS to be uploaded
  * @return {string} The id of the newly created API
  */
 async function createNewListing (specPath: string): Promise<string> {
@@ -47,16 +47,10 @@ async function createNewListing (specPath: string): Promise<string> {
 
   try {
     const res = await axios.request(options)
-    if (res.status === 200) {
-      return res.data.data.createApisFromRapidOas[0].apiId
-    } else {
-      throw new UnexpectedStatusError(
-                `HTTP status is not 201, but ${res.status}`
-      )
-    }
-  } catch (err) {
-    const graphqlError = err as string
-    throw new PlatformAPIError(`Platform API error: ${graphqlError}`)
+    return res.data.data.createApisFromRapidOas[0].apiId
+  } catch (e) {
+    console.log(e.response.error)
+    throw new UnexpectedResponseError('Unknown error in create_new_listing')
   }
 }
 

@@ -10,11 +10,11 @@ export function readSpec (oas: string): string {
     const spec = fs.readFileSync(oas, 'utf-8')
     try {
       return JSON.parse(spec)
-    } catch (err) {
+    } catch (e) {
       throw new Error("Couldn't parse file: " + oas)
     }
-  } catch (err) {
-    console.log(err)
+  } catch (e) {
+    console.log(e)
     throw new Error('Could not read file: ' + oas)
   }
 }

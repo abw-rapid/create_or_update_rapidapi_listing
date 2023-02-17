@@ -28,7 +28,7 @@ async function main (): Promise<void> {
   const spec = readSpec(specPath)
   const name = apiNameFromSpec(spec)
   const apiId = await alreadyExists(name, parseInt(ownerId), client)
-  if (apiId !== '0') {
+  if (apiId !== '__not_found__') {
     // Provide some data about the API
     const currentVersion = await getCurrentApiVersion(apiId, client)
     const parsedCurrentVersion = currentVersion.name
