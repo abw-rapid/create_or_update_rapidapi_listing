@@ -1,5 +1,4 @@
-import { GraphQLClient } from 'graphql-request'
-import { apiVersion } from './types'
+import { apiVersion, apiVersions } from './types'
 import { SemVer } from 'semver'
 
 /**
@@ -8,16 +7,9 @@ import { SemVer } from 'semver'
  * @param lookingFor The SemVer we are looking for
  * @returns {apiVersion} Returns an apiVersion object - it'll be an empty object ({}) if no existing version is found
  */
-
-
-
-
-
-
-// find whether this version already exists
-function isExisting(versionList: Array<apiVersion>, lookingFor: SemVer): apiVersion {
+function apiVersionExists(versionList: apiVersions, lookingFor: SemVer): apiVersion {
     let returnVersion = {} as apiVersion
-    for (const versionFromList of versionList) {
+    for (const versionFromList of versionList.nodes) {
       if (versionFromList.name.version === lookingFor.version) {
         returnVersion = versionFromList
         break
@@ -25,3 +17,5 @@ function isExisting(versionList: Array<apiVersion>, lookingFor: SemVer): apiVers
     }
     return returnVersion
   }
+  
+  export { apiVersionExists }
