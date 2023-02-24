@@ -96,7 +96,7 @@ test('test return value of getting apiVersions: two results', async () => {
     'api_8ef57cc9-aca9-427d-b643-7d9eec7b5712',
     c
   )
-  expect(result).toEqual(twoApiVersionList.apiVersions.nodes)
+  expect(result).toEqual(twoApiVersionList.apiVersions)
 })
 
 test('test return value of getting apiVersions: zero results', async () => {

@@ -1,4 +1,4 @@
-import { apiVersion, apiVersionsResponseObject } from './types'
+import { apiVersions, apiVersionsResponseObject } from './types'
 import { NoApiVersionsFoundError } from './errors'
 import { GraphQLClient } from 'graphql-request'
 
@@ -8,7 +8,7 @@ import { GraphQLClient } from 'graphql-request'
  * @param {GraphQLClient} client The GraphQL Client object for reuse
  * @return {Promise<Array<apiVersion>>} An array containing the apiVersions for this apiId
  */
-async function getApiVersions (apiId: string, client: GraphQLClient): Promise<Array<apiVersion>> {
+async function getApiVersions (apiId: string, client: GraphQLClient): Promise<apiVersions> {
   const query = `
     query apiVersions($where: ApiVersionWhereInput) {
         apiVersions(where: $where) {
@@ -36,7 +36,7 @@ async function getApiVersions (apiId: string, client: GraphQLClient): Promise<Ar
   } 
 
   if (result.apiVersions.nodes.length > 0) {
-    return result.apiVersions.nodes
+    return result.apiVersions
   } else {
     throw new NoApiVersionsFoundError('No existing API versions found: that should not be possible')
   }
