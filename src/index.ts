@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import { alreadyExists } from './already_exists'
+import { alreadyExists } from './api_already_exists'
 import { apiVersionFromSpec, apiNameFromSpec } from './parse_spec'
 import { createApiVersion } from './create_api_version'
 import { createNewListing } from './create_new_listing'
-import { getCurrentApiVersion } from './get_current_api_version'
+import { getCurrentApiVersion } from './get_apiVersions'
 import { graphqlHeaders } from './headers'
 import { readSpec } from './read_spec'
 import { updateApiVersion } from './update_api_version'

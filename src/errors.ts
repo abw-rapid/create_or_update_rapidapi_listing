@@ -1,3 +1,10 @@
+class MultipleAPIsFoundError extends Error {
+  constructor (message: string) {
+    super(message)
+    this.name = this.constructor.name
+  }
+}
+
 class InvalidCollectionError extends Error {
   constructor (message: string) {
     super(message)
@@ -5,7 +12,7 @@ class InvalidCollectionError extends Error {
   }
 }
 
-class NoCurrentVersionError extends Error {
+class NoApiVersionsFoundError extends Error {
   constructor (message: string) {
     super(message)
     this.name = this.constructor.name
@@ -41,8 +48,9 @@ class UnexpectedStatusError extends Error {
 }
 
 export {
+  MultipleAPIsFoundError,
   InvalidCollectionError,
-  NoCurrentVersionError,
+  NoApiVersionsFoundError,
   PlatformAPIError,
   SpecParsingError,
   UnexpectedResponseError,

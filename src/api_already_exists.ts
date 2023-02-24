@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
-import { apiResponseObject } from './types'
+import { api, apiResponseObject } from './types'
+import { MultipleAPIsFoundError } from './errors'
 
 /**
  * Checks whether an API already exists<br>
@@ -8,9 +9,9 @@ import { apiResponseObject } from './types'
  * @param {string} name Name of the API to check
  * @param {number} ownerId The id of the owner of the API we are looking for
  * @param {GraphQLClient} client The GraphQL Client object for reuse
- * @return {Promise<string>} The id of the existing API
+ * @return {Promise<api>} The existing API
  */
-async function alreadyExists (name: string, ownerId: number, client: GraphQLClient): Promise<string> {
+async function alreadyExists (name: string, ownerId: number, client: GraphQLClient): Promise<api> {
   const query = `
     query api($where: ApiWhereInput) {
         apis(where: $where) {
@@ -27,16 +28,18 @@ async function alreadyExists (name: string, ownerId: number, client: GraphQLClie
       ownerId
     }
   }
+
   const res: apiResponseObject = await client.request(query, variables)
   const apis = res.apis
+
   if (apis.nodes.length === 0) {
-    return '__not_found__'
+    return {} as api
   } else if (apis.nodes.length === 1) {
     const first_api = apis.nodes[0]
-    return first_api.id
+    return first_api
   } else {
     console.log(apis.nodes)
-    throw new Error(`More than one API found with name ${name}; that shouldn't happen.`)
+    throw new MultipleAPIsFoundError(`Multiple APIs found called ${name} belonging to ${ownerId}; that shouldn't happen.`)
   }
 }
 

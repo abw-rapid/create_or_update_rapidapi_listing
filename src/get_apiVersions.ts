@@ -1,16 +1,14 @@
-import { getCurrentVersion } from './get_current_version'
-import { NoCurrentVersionError } from './errors'
 import { apiVersion, apiVersionsResponseObject } from './types'
+import { NoApiVersionsFoundError } from './errors'
 import { GraphQLClient } from 'graphql-request'
 
 /**
  * Fetch the id of the latest version of an API
  * @param {string} apiId The id of the API we want to get the latest version for
  * @param {GraphQLClient} client The GraphQL Client object for reuse
- * @return {Promise<apiVersion>} An object containing the name and id of the latest version of this API
+ * @return {Promise<Array<apiVersion>>} An array containing the apiVersions for this apiId
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function getCurrentApiVersion (apiId: string, client: GraphQLClient): Promise<apiVersion> {
+async function getApiVersions (apiId: string, client: GraphQLClient): Promise<Array<apiVersion>> {
   const query = `
     query apiVersions($where: ApiVersionWhereInput) {
         apiVersions(where: $where) {
@@ -18,6 +16,7 @@ async function getCurrentApiVersion (apiId: string, client: GraphQLClient): Prom
             id
             name
             current
+            versionStatus
           }
         }
       }`
@@ -28,17 +27,19 @@ async function getCurrentApiVersion (apiId: string, client: GraphQLClient): Prom
     }
   }
 
+  let result: apiVersionsResponseObject = {} as apiVersionsResponseObject
   try {
-    const res: apiVersionsResponseObject = await client.request(query, variables)
-    if (res.apiVersions.nodes.length > 0) {
-      return getCurrentVersion(res.apiVersions)
-    } else {
-      throw new NoCurrentVersionError('No API versions found')
-    }
+    result = await client.request(query, variables)
   } catch (err) {
     console.log(err)
     throw new Error('Unknown error in get_current_api_version')
+  } 
+
+  if (result.apiVersions.nodes.length > 0) {
+    return result.apiVersions.nodes
+  } else {
+    throw new NoApiVersionsFoundError('No existing API versions found: that should not be possible')
   }
 }
 
-export { getCurrentApiVersion }
+export { getApiVersions }

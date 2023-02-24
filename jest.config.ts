@@ -15,7 +15,18 @@ const config: Config.InitialOptions = {
     '!src/errors.ts',
     '!src/index.ts',
     '!src/types.ts'
-  ]
+  ],
+  transform: {
+    '^.+\\.[t]s?$': [
+    'ts-jest',
+      {
+      diagnostics: {
+        ignoreCodes: [151001]
+      },
+      },
+    ],
+  },
+
 }
 
 export default config
