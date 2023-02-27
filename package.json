@@ -23,7 +23,8 @@
     "dotenv": "^16.0.3",
     "graphql-request": "^5.0.0",
     "package.json": "^2.0.1",
-    "semver": "^7.3.8"
+    "semver": "^7.3.8",
+    "toml": "^3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
