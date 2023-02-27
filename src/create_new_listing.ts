@@ -18,7 +18,6 @@ async function createNewListing (specPath: string): Promise<string> {
     mutation createApisFromRapidOas($creations: [ApiCreateFromRapidOasInput!]!) {
         createApisFromRapidOas(creations: $creations) {
         apiId
-        
         }
     }`
 

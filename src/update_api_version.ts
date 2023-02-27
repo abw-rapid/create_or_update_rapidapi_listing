@@ -7,10 +7,14 @@ import { SpecParsingError, UnexpectedStatusError } from '../src/errors'
 
 /**
  * Creates and returns a new API version for a given API
- * @param {*} version_name Version name or number for the new API version
- * @param {*} api_id The id of the API to create a new version for
- * @param {object} client The GraphQL Client object for reuse
- * @returns {string} The id of the newly created API version
+*  The return value is a bit strange, because we cannot give back any useful information about the
+*  updated API or updated API version, since the only thing we can get back from the mutation is 
+*  the apiID (which we already have), a trackingId (which doesn't help us much) and an array of warnings,
+*  which we aren't handling at the moment. At some point we might return either an empty array of
+*  strings or an array of warnings.
+ * @param {string} specPath Version name or number for the new API version
+ * @param {string} apiVersionId The id of the API version to update
+ * @returns {string} The HTTP response in number format (200, 400, etc.)
  */
 async function updateApiVersion (specPath: string, apiVersionId: string): Promise<number> {
   const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true })

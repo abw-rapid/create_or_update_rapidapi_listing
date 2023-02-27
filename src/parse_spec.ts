@@ -7,7 +7,7 @@ import { SpecParsingError } from './errors'
  * @returns {string} The contents of the version field in the info block
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function apiVersionFromSpec (spec: any): SemVer {
+export function apiVersionFromSpec (spec: any): SemVer {
   if (spec.info.version === undefined) {
     throw new SpecParsingError("No property 'version' in spec")
   } else {
@@ -29,26 +29,10 @@ function apiVersionFromSpec (spec: any): SemVer {
  * @returns {string} The contents of the title field in the info block
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function apiNameFromSpec (spec: any): string {
+export function apiNameFromSpec (spec: any): string {
   if (spec.info.title === undefined) {
     throw new SpecParsingError("No property 'title' in spec")
   } else {
     return spec.info.title
   }
 }
-
-/**
- * Return the description field of a spec file
- * @param {string} spec The contents of a spec file (valid json)
- * @returns {string} The contents of the description field in the info block
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function apiDescriptionFromSpec (spec: any): string {
-  if (spec.info.description === undefined) {
-    throw new SpecParsingError("No property 'description' in spec")
-  } else {
-    return spec.info.description
-  }
-}
-
-export { apiVersionFromSpec, apiNameFromSpec, apiDescriptionFromSpec }

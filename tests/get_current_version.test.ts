@@ -8,13 +8,13 @@ const currentVersionList: apiVersions = {
     id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-ba02c06fbddb',
     name: new SemVer('0.4.3'),
     current: true,
-    versionStatus: apiVersionStatus.DRAFT
+    versionStatus: apiVersionStatus.draft
   },
   {
     id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-zzzzzzzzzzzz',
     name: new SemVer('0.4.2'),
     current: false,
-    versionStatus: apiVersionStatus.ACTIVE
+    versionStatus: apiVersionStatus.active
   }
 ]
 }
@@ -22,7 +22,7 @@ const expected = {
   id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-ba02c06fbddb',
   name: new SemVer('0.4.3'),
   current: true,
-  versionStatus: apiVersionStatus.DRAFT
+  versionStatus: apiVersionStatus.draft
 }
 test('gets the current version from a list of apiVersions', () => {
   expect(getCurrentVersion(currentVersionList)).toStrictEqual(expected)

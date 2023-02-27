@@ -1,4 +1,4 @@
-import { NoCurrentVersionError } from './errors'
+import { NoApiVersionsFoundError } from './errors'
 import { apiVersion, apiVersions } from './types'
 
 /**
@@ -13,7 +13,7 @@ function getCurrentVersion (versions: apiVersions): apiVersion {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const current = versions.nodes.find((element: any) => element.current === true)
   if (current === undefined) {
-    throw new NoCurrentVersionError(
+    throw new NoApiVersionsFoundError(
       'No version is marked as current. That should be impossible!'
     )
   } else {

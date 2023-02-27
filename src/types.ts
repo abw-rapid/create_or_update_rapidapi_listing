@@ -53,8 +53,8 @@ export enum updateEnum {
 
 // status enum for apiVersions
 export enum apiVersionStatus {
-  DRAFT,
-  ACTIVE,
-  DEPRECATED
+  draft = "DRAFT",
+  active = "ACTIVE",
+  deprecated = "DEPRECATED"
 }
 
