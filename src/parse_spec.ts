@@ -7,7 +7,7 @@ import { SpecParsingError } from './errors'
  * @returns {string} The contents of the version field in the info block
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function apiVersionFromSpec (spec: any): SemVer {
+export function getApiVersionFromSpec (spec: any): SemVer {
   if (spec.info.version === undefined) {
     throw new SpecParsingError("No property 'version' in spec")
   } else {
@@ -29,7 +29,7 @@ export function apiVersionFromSpec (spec: any): SemVer {
  * @returns {string} The contents of the title field in the info block
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function apiNameFromSpec (spec: any): string {
+export function getApiNameFromSpec (spec: any): string {
   if (spec.info.title === undefined) {
     throw new SpecParsingError("No property 'title' in spec")
   } else {

@@ -57,4 +57,3 @@ export enum apiVersionStatus {
   active = "ACTIVE",
   deprecated = "DEPRECATED"
 }
-

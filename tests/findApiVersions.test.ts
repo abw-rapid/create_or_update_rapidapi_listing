@@ -140,5 +140,5 @@ test.each([
    { a: versionList, b: new SemVer('2.0.0'), expected: res200 },
    { a: versionList, b: new SemVer('4.0.0'), expected: res400 }
 ])('find closest apiVersion to $b.version', ({a, b, expected}) => {
-    expect(findClosest(a, b)).toEqual(expected)
+    expect(findClosest(a.nodes, b)).toEqual(expected)
 })

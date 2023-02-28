@@ -8,10 +8,9 @@ import { apiVersion, apiVersions } from './types'
  * @param {apiVersions} versions Array of apiVersion objects
  * @return {apiVersion} An object containing the name and id of the latest version of this API
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getCurrentVersion (versions: apiVersions): apiVersion {
+function getCurrentVersion(versions: apiVersions): apiVersion {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const current = versions.nodes.find((element: any) => element.current === true)
+  const current = versions.nodes.find((element: apiVersion) => element.current === true)
   if (current === undefined) {
     throw new NoApiVersionsFoundError(
       'No version is marked as current. That should be impossible!'

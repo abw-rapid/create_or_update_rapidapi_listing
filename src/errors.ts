@@ -1,3 +1,10 @@
+class UpdatePolicyError extends Error {
+  constructor (message: string) {
+    super(message)
+    this.name = this.constructor.name
+  }
+}
+
 class MultipleAPIsFoundError extends Error {
   constructor (message: string) {
     super(message)
@@ -48,6 +55,7 @@ class UnexpectedStatusError extends Error {
 }
 
 export {
+  UpdatePolicyError,
   MultipleAPIsFoundError,
   InvalidCollectionError,
   NoApiVersionsFoundError,

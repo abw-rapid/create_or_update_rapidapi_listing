@@ -1,0 +1,19 @@
+[general]
+create_as = "active" # create as draft, active or deprecated (unlogical, but supported)
+allow_update_existing = false # update the existing v1.1.1 when a spec with v1.1.1 is offered
+allow_update_deprecated = true # same as above, but when the existing version is deprecated
+
+[update_policy]
+major = "create" # always create new major versions
+minor = "update" # always update the closest older minor version
+patch = "update" # always update the closest older patch version
+
+[allow_older]
+major = true # allow creating v1 when v2 exists; always create, never update
+minor = true # allow creating v1.1 when v1.2 exists; always create, never update
+patch = true # allow creating v1.1.1 when v1.1.2 exists; always create, never update
+
+[auto_current]
+major = false # set new major versions to current automatically
+minor = false # set new minor versions to current automatically
+patch = false # set new patch versions to current automatically
