@@ -1,5 +1,4 @@
 import { gql, GraphQLClient } from 'graphql-request'
-import { SemVer } from 'semver'
 import { UnexpectedResponseError } from './errors'
 import { apiVersion, createApiVersionResponseObject } from './types'
 
@@ -11,7 +10,7 @@ import { apiVersion, createApiVersionResponseObject } from './types'
  * @returns {Promise<apiVersion>} The id of the newly created API version
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function createApiVersion (name: SemVer, apiId: string, client: GraphQLClient): Promise<apiVersion> {
+async function createApiVersion(name: string, apiId: string, client: GraphQLClient): Promise<apiVersion> {
   const mutation = gql`
     mutation createApiVersions($apiVersions: [ApiVersionCreateInput!]!) {
         createApiVersions(apiVersions: $apiVersions) {
@@ -26,14 +25,13 @@ async function createApiVersion (name: SemVer, apiId: string, client: GraphQLCli
   const params = {
     apiVersions: {
       api: apiId,
-      name: name.raw
+      name
     }
   }
 
   try {
     const res: createApiVersionResponseObject = await client.request(mutation, params)
     const response = res.createApiVersions[0]
-    response.name = new SemVer(response.name)
     return response as apiVersion
   } catch (e) {
     console.log(e)

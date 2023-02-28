@@ -34,7 +34,7 @@ const versionList = JSON.parse(`
 
 const result = [
   [
-    '\n    query apiVersions($where: ApiVersionWhereInput) {\n        apiVersions(where: $where) {\n          nodes {\n            id\n            name\n          }\n        }\n      }',
+    '\n    query apiVersions($where: ApiVersionWhereInput) {\n        apiVersions(where: $where) {\n          nodes {\n            id\n            name\n            current\n          }\n        }\n      }',
     {
       where: {
         apiId: 'api_8ef57cc9-aca9-427d-b643-7d9eec7b5712'
@@ -51,7 +51,7 @@ test('test formatting of graphql query for current version', async () => {
   type mockRequestSpy = (
     document: g.RequestDocument,
     variables: g.Variables
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>
 
   const c = new g.GraphQLClient(env.INPUT_GRAPHQL_URL)

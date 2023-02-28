@@ -1,5 +1,3 @@
-import { SemVer } from 'semver'
-
 // Describes the response as received from the gPAPI, containing an apis object
 export type apiResponseObject = {
   apis: apis
@@ -33,7 +31,7 @@ export type apiVersions = {
 // TODO: add documentation on why and when the api property is not used
 export type apiVersion = {
   id: string
-  name: SemVer
+  name: string
   current?: boolean
   api?: string
   versionStatus?: apiVersionStatus

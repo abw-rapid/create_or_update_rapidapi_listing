@@ -1,13 +1,13 @@
-import { lt, gt, SemVer } from 'semver'
+import { lt, gt, parse, SemVer } from 'semver'
+import { SpecParsingError } from './errors'
 import { apiVersion, apiVersions } from './types'
 
 // figure out if there is a newer apiVersion than what we are offered in the list
 // returns the first newer version found
-export function findNewer(versionList: apiVersions, lookingFor: SemVer): Array<apiVersion> {
+export function findNewer(versionList: apiVersions, lookingFor: string): Array<apiVersion> {
     const returnVersions: Array<apiVersion> = []
-    console.log("version: ", versionList)
-    for (const versionFromList of versionList.nodes) { 
-        if (gt(versionFromList.name, lookingFor.version)) { //TODO: removed .version from here; test will fail?
+    for (const versionFromList of versionList.nodes) {
+        if (gt(versionFromList.name, lookingFor)) {
             returnVersions.push(versionFromList)
         }
     }
@@ -15,21 +15,27 @@ export function findNewer(versionList: apiVersions, lookingFor: SemVer): Array<a
 }
 
 // Create a new array containing only *older* apiVersions than the one we are working with
-export function findOlder(versionList: apiVersions, lookingFor: SemVer): Array<apiVersion> {
+export function findOlder(versionList: apiVersions, lookingFor: string): Array<apiVersion> {
     const droppedNewer = versionList.nodes.filter(apiVersion =>
-        lt(apiVersion.name, lookingFor.version)
+        lt(apiVersion.name, lookingFor)
     )
-    console.log(droppedNewer)
     return droppedNewer
 }
 
 // find closest existing apiVersion for a given apiVersion
-export function findClosest(versionList: Array<apiVersion>, lookingFor: SemVer): apiVersion {
-    const offsets = versionList.map(apiVersion => {
-        return Math.abs(
-            (apiVersion.name.major * 100 + apiVersion.name.minor * 10 + apiVersion.name.patch) -
-            (lookingFor.major * 100 + lookingFor.minor * 10 + lookingFor.patch)
-        )
+export function findClosest(versionList: Array<apiVersion>, lookingFor: string): apiVersion {
+    const specVersion = parse(lookingFor)
+    let offsets: Array<number> = []
+    offsets = versionList.map(apiVersion => {
+        const hubVersion = parse(apiVersion.name)
+        if (specVersion instanceof SemVer && hubVersion instanceof SemVer) {
+            return Math.abs(
+                (hubVersion.major * 100 + hubVersion.minor * 10 + hubVersion.patch) -
+                (specVersion.major * 100 + specVersion.minor * 10 + specVersion.patch)
+            )
+        } else {
+            throw new SpecParsingError("Either spec or existing version isn't SemVer")
+        }
     })
     const minOffset = Math.min.apply(null, offsets)
     return versionList[offsets.indexOf(minOffset)]
