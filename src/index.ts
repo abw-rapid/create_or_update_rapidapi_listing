@@ -58,7 +58,7 @@ import { updateApiVersion } from './update_api_version'
     } else {
         /// This is an existing API, let's inspect it
         console.log("=> This is an existing API, called: '", apiNameFromSpec + " '" +
-            ", version", apiVersionFromSpec.version)
+            ", version", apiVersionFromSpec)
         const existingVersions = await getApiVersions(api.id, client)
         console.log(`==> The API ID on the Hub is ${api.id}`)
         console.log(`==> Found ${existingVersions.nodes.length} existing versions of this API`)
@@ -69,12 +69,12 @@ import { updateApiVersion } from './update_api_version'
         if (Object.keys(existingApiVersion).length > 0) {
             // This is an existing apiVersion.name, so we need to figure out whether we are allowed to
             // update this existing apiVersion with a new spec file
-            console.log(`====> Found an existing apiVersion with the same name (${apiVersionFromSpec.version})`)
+            console.log(`====> Found an existing apiVersion with the same name (${apiVersionFromSpec})`)
             if (config.general.allow_update_existing === true) {
                 console.warn(" WARN: Updating existing apiVersion with new spec")
                 const updatedApi = await updateApiVersion(specPath, existingApiVersion.id)
                 console.log(`=====> Updated API ${updatedApi}, apiVersion ${existingApiVersion.id}` +
-                    ` to version ${apiVersionFromSpec.version}`)
+                    ` to version ${apiVersionFromSpec}`)
             } else {
                 const message = "ERROR: Updating existing apiVersion with new spec not allow by config."
                 throw new UpdatePolicyError(message)
@@ -94,7 +94,7 @@ import { updateApiVersion } from './update_api_version'
                 const closestOlder = findClosest(olderApiVersions, apiVersionFromSpec)
                 console.log("=====> The closest, older version is: ", closestOlder)
                 const semverUpdate = getUpdateLevel(closestOlder.name, null, apiVersionFromSpec)
-                console.log(`=====> Compared to ${closestOlder.name.version}, this update is: ${semverUpdate}`)
+                console.log(`=====> Compared to ${closestOlder.name}, this update is: ${semverUpdate}`)
                 // TODO: implement update / create code
             } else {
                 // apiVersions with newer versions exist, therefore, we need to compare to both the
@@ -107,7 +107,7 @@ import { updateApiVersion } from './update_api_version'
                 console.log("======> Closest newer version: ", closestNewer.name)
                 console.log("======> Closest older version: ", closestOlder.name)
                 const semverUpdate = getUpdateLevel(closestOlder.name, closestNewer.name, apiVersionFromSpec)
-                console.log(`=====> Compared to ${closestOlder.name.version} and ${closestNewer.name.version}` +
+                console.log(`=====> Compared to ${closestOlder.name} and ${closestNewer.name}` +
                     `, this update is: ${semverUpdate}`)
                 // TODO: implement update / create code
             }
