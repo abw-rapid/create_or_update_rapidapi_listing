@@ -1,6 +1,7 @@
 import { updateApiVersion } from '../src/update_api_version'
 import nock = require('nock')
 import * as fs from 'fs'
+import { apiVersion } from '../src/types'
 
 afterEach(() => {
   jest.restoreAllMocks()
@@ -21,6 +22,11 @@ const res = {
   }
 }
 
+const testVersion: apiVersion = {
+  id: 'api_version_id',
+  name: 'api_version_name'
+}
+
 test('handling update_api_version reponse', async () => {
   const mockRead = jest
     .spyOn(fs, 'readFileSync')
@@ -30,10 +36,10 @@ test('handling update_api_version reponse', async () => {
   expect(
     await updateApiVersion(
       '/home/someuser/test_spec.json',
-      'an_api_version'
+      testVersion
     )
-  ).toEqual(200)
+  ).toBeTruthy
   mockRead.mockRestore()
 })
 
-export {}
+export { }

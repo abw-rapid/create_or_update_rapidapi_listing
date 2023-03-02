@@ -1,4 +1,4 @@
-import { parse, SemVer } from 'semver'
+import { parse } from 'semver'
 import { SpecParsingError } from './errors'
 
 /**

@@ -4,6 +4,7 @@ import FormData = require('form-data')
 import * as core from '@actions/core'
 import { formGraphqlHeaders } from '../src/headers'
 import { SpecParsingError, UnexpectedStatusError } from '../src/errors'
+import { apiVersion } from './types'
 
 /**
  * Creates and returns a new API version for a given API
@@ -16,7 +17,7 @@ import { SpecParsingError, UnexpectedStatusError } from '../src/errors'
  * @param {string} apiVersionId The id of the API version to update
  * @returns {string} The HTTP response in number format (200, 400, etc.)
  */
-async function updateApiVersion (specPath: string, apiVersionId: string): Promise<number> {
+async function updateApiVersion(specPath: string, apiVersion: apiVersion): Promise<boolean> {
   const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true })
   const query = `
         mutation updateApisFromRapidOas($updates: [ApiUpdateFromRapidOasInput!]!) {
@@ -28,7 +29,7 @@ async function updateApiVersion (specPath: string, apiVersionId: string): Promis
   const variables = {
     updates: {
       spec: null,
-      apiVersionId
+      apiVersionId: apiVersion.id
     }
   }
 
@@ -51,11 +52,11 @@ async function updateApiVersion (specPath: string, apiVersionId: string): Promis
 
   const res = await axios.request(options)
   if (res.status === 200 && res.data.errors === undefined) {
-    return res.status as number
+    return true
   } else if (
     res.status === 200 &&
-        res.data.errors !== undefined &&
-        typeof res.data.errors === 'object'
+    res.data.errors !== undefined &&
+    typeof res.data.errors === 'object'
   ) {
     // this happens when an unknown collection is part of the spec; we get a 200, but
     // also an unprocessable_entity error :/
@@ -64,7 +65,7 @@ async function updateApiVersion (specPath: string, apiVersionId: string): Promis
     throw new SpecParsingError(`Error parsing spec: ${errorMessage.toString()}`)
   } else {
     throw new UnexpectedStatusError(
-            `HTTP status is not 200, but ${res.status}`
+      `HTTP status is not 200, but ${res.status}`
     )
   }
 }

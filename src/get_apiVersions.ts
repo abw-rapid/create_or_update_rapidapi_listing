@@ -8,7 +8,7 @@ import { GraphQLClient } from 'graphql-request'
  * @param {GraphQLClient} client The GraphQL Client object for reuse
  * @return {Promise<Array<apiVersion>>} An array containing the apiVersions for this apiId
  */
-async function getApiVersions (apiId: string, client: GraphQLClient): Promise<apiVersions> {
+async function getApiVersions(apiId: string, client: GraphQLClient): Promise<apiVersions> {
   const query = `
     query apiVersions($where: ApiVersionWhereInput) {
         apiVersions(where: $where) {
@@ -33,7 +33,7 @@ async function getApiVersions (apiId: string, client: GraphQLClient): Promise<ap
   } catch (err) {
     console.log(err)
     throw new Error('Unknown error in get_current_api_version')
-  } 
+  }
 
   if (result.apiVersions.nodes.length > 0) {
     return result.apiVersions

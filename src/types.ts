@@ -44,9 +44,9 @@ export type createApiVersionResponseObject = {
 
 // enum to describe the update "level" between two different SemVers 
 export enum updateEnum {
-  major,
-  minor,
-  patch
+  major = "major",
+  minor = "minor",
+  patch = "patch"
 }
 
 // enum to describe the update method
@@ -59,8 +59,8 @@ export enum updateMethod {
 
 // status enum for apiVersions
 export enum apiVersionStatus {
-  draft = "DRAFT",
   active = "ACTIVE",
+  draft = "DRAFT",
   deprecated = "DEPRECATED"
 }
 
@@ -68,4 +68,6 @@ export type apiPolicy = {
   method: updateMethod
   setCurrent: boolean
   createAs: apiVersionStatus
+  updateType: updateEnum
+  api: string
 }

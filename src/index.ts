@@ -15,7 +15,8 @@ import { UpdatePolicyError } from './errors'
 import { findClosest, findNewer, findOlder } from './findApiVersions'
 import { getUpdateLevel } from './getUpdateLevel'
 import { updateApiVersion } from './update_api_version'
-import { handleUpdate } from './handle_update'
+import { getUpdatePolicy, handleUpdate } from './handle_update'
+import { apiPolicy, apiVersion } from './types'
 
 
 (async function () {
@@ -73,9 +74,12 @@ import { handleUpdate } from './handle_update'
             console.log(`====> Found an existing apiVersion with the same name (${apiVersionFromSpec})`)
             if (config.general.allow_update_existing === true) {
                 console.warn(" WARN: Updating existing apiVersion with new spec")
-                const updatedApi = await updateApiVersion(specPath, existingApiVersion.id)
-                console.log(`=====> Updated API ${updatedApi}, apiVersion ${existingApiVersion.id}` +
-                    ` to version ${apiVersionFromSpec}`)
+                if (await updateApiVersion(specPath, existingApiVersion)) {
+                    console.log(`=====> Updated API ${apiNameFromSpec}, apiVersion ${existingApiVersion.id}` +
+                        ` to version ${apiVersionFromSpec}`)
+                } else {
+                    console.error("Problem updating existing API version in Hub.")
+                }
             } else {
                 const message = "ERROR: Updating existing apiVersion with new spec not allow by config."
                 throw new UpdatePolicyError(message)
@@ -88,16 +92,17 @@ import { handleUpdate } from './handle_update'
             // apiVersions, older apiVersions, or both.
             const newerApiVersions = findNewer(existingVersions, apiVersionFromSpec)
             const olderApiVersions = findOlder(existingVersions, apiVersionFromSpec)
+            let policy = {} as apiPolicy
+            let closestOlder = {} as apiVersion
             if (newerApiVersions.length === 0) {
                 // The provided spec has a higher version number than any of the existing ones
                 // in other words, it is the newest apiVersion we've ever seen!
                 console.log("=====> No newer apiVersions found on the Hub")
-                const closestOlder = findClosest(olderApiVersions, apiVersionFromSpec)
-                console.log("=====> The closest, older version is: ", closestOlder)
+                closestOlder = findClosest(olderApiVersions, apiVersionFromSpec)
+                console.log("=====> The closest, older version is: ", closestOlder.name)
                 const semverUpdate = getUpdateLevel(closestOlder.name, null, apiVersionFromSpec)
                 console.log(`=====> Compared to ${closestOlder.name}, this update is: ${semverUpdate}`)
-                const policy = handleUpdate(semverUpdate, false)
-                console.log(policy)
+                policy = getUpdatePolicy(semverUpdate, api, false)
             } else {
                 // apiVersions with newer versions exist, therefore, we need to compare to both the
                 // closest older and closest newer apiVersion to determine wether this is a patch
@@ -105,7 +110,7 @@ import { handleUpdate } from './handle_update'
                 console.log('=====> Uploaded apiVersion is older than the following apiVersion(s) on Hub:')
                 console.log('=====> ', newerApiVersions.map(v => v.name).sort().join(', '))
                 const closestNewer = findClosest(newerApiVersions, apiVersionFromSpec)
-                const closestOlder = findClosest(olderApiVersions, apiVersionFromSpec)
+                closestOlder = findClosest(olderApiVersions, apiVersionFromSpec)
                 console.log("======> Closest newer version: ", closestNewer.name)
                 let semverUpdate = ""
                 if (closestOlder) { // only if there actually *are* older apiVersions...
@@ -117,33 +122,15 @@ import { handleUpdate } from './handle_update'
                     semverUpdate = getUpdateLevel(null, closestNewer.name, apiVersionFromSpec)
                     console.log(`=====> Compared to ${closestNewer.name}, this update is: ${semverUpdate}`)
                 }
-                const policy = handleUpdate(semverUpdate, true)
-                console.log(policy)
+                policy = getUpdatePolicy(semverUpdate, api, true)
             }
-
-            // we know the new version
-            // we know the updateLevel
-            // we know the policy -> can fetch from config based on updateLevel
-            // we know wheter to set the new api as current
-            // we know whether to update or create
-            // we know whether to allow older
-
-            // we know the closest, older version to update, if that's what we want
-
-            // call updateFunction[updateLevel]
-
-
-
-
-
-
+            if (await handleUpdate(policy, specPath, closestOlder, client)) {
+                console.log('')
+                console.log('Finished successfully')
+            } else {
+                console.log('')
+                console.error('Finished with errors')
+            }
         }
-
-
-
-
     }
-
-
-
 })()
