@@ -9,6 +9,19 @@ import { GraphQLClient } from 'graphql-request'
 import { updateApiVersion } from './update_api_version'
 import { setApiCurrent, setApiStatus } from './set_created_version_as_current'
 
+/**
+ * Build an apiPolicy object that we can use below to perform the update or create action for a (new) apiVersion </br>
+ * 
+ * @param {string} updateLevel "major", "minor" or "patch": defines what kind of update we are handling
+ * @param {api} existingApi we store the API ID in the apiPolicy object to make calls to 
+ * the GraphQL easier later on; there is always an existin API at this point
+ * @param {boolean} isOlder boolean to indicate whether or not this apiVersion has a lower version number 
+ * than some existing apiVersion objects
+ * @param {apiVersion} closestOlder apiVersion object containing the closest API version, or undefined; 
+ * if this is undefined, we are in the corner case where we are creating an apiVersion that is older 
+ * than all of the existing ones...
+ * @return {apiPolicy} An apiPolicy object containing information on how to handle the new apiVersion
+ */
 export function getUpdatePolicy(updateLevel: string, existingApi: api, isOlder: boolean, closestOlder: apiVersion | undefined): apiPolicy {
     let config
     const policy: apiPolicy = {} as apiPolicy
@@ -41,6 +54,15 @@ export function getUpdatePolicy(updateLevel: string, existingApi: api, isOlder: 
     return policy
 }
 
+/**
+ * Handle the actual updating or creation of an apiVersion
+ * 
+ * @param {apiPolicy} policy The apiPolicy object defining how to handle this apiVersion
+ * @param {string} specPath string containing the location of the OpenAPI spec file
+ * @param {apiVersion|null} toBeUpdated Either an apiVersion that we'll push a new spec into, or undefined
+ * @param {GraphQLClient} client The GraphQL Client object for reuse
+ * @return {Promise<boolean>} An apiPolicy object containing information on how to handle the new apiVersion
+ */
 export async function handleUpdate(policy: apiPolicy, specPath: string, toBeUpdated: apiVersion | null, c: GraphQLClient): Promise<boolean> {
     const spec = readSpec(specPath)
     const parsedSpecVersion = getApiVersionFromSpec(spec)

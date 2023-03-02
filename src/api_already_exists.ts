@@ -4,14 +4,14 @@ import { MultipleAPIsFoundError } from './errors'
 
 /**
  * Checks whether an API already exists<br>
- * Returns the id of the existing API if it already exists<br>
- * Returns null if not
+ * Returns the existing API if it already exists<br>
+ * Returns empty api object if it does not already exists
  * @param {string} name Name of the API to check
  * @param {number} ownerId The id of the owner of the API we are looking for
  * @param {GraphQLClient} client The GraphQL Client object for reuse
  * @return {Promise<api>} The existing API
  */
-async function alreadyExists (name: string, ownerId: number, client: GraphQLClient): Promise<api> {
+export async function alreadyExists(name: string, ownerId: number, client: GraphQLClient): Promise<api> {
   const query = `
     query api($where: ApiWhereInput) {
         apis(where: $where) {
@@ -35,12 +35,9 @@ async function alreadyExists (name: string, ownerId: number, client: GraphQLClie
   if (apis.nodes.length === 0) {
     return {} as api
   } else if (apis.nodes.length === 1) {
-    const first_api = apis.nodes[0]
-    return first_api
+    return apis.nodes[0]
   } else {
     console.log(apis.nodes)
     throw new MultipleAPIsFoundError(`Multiple APIs found called ${name} belonging to ${ownerId}; that shouldn't happen.`)
   }
 }
-
-export { alreadyExists }

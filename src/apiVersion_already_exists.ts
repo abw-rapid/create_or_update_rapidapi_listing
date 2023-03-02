@@ -2,11 +2,11 @@ import { apiVersion, apiVersions } from './types'
 
 /**
  * Checks whether an apiVersion with a specific name (i.e. version number) already exists for an API
- * @param versionList List of apiVersions to check for the specific name (i.e. version number)
- * @param lookingFor The SemVer we are looking for
- * @returns {apiVersion} Returns an apiVersion object - it'll be an empty object ({}) if no existing version is found
+ * @param {apiVersions} versionList List of apiVersions to check for the specific name (i.e. version number)
+ * @param {string} lookingFor The version number we are looking for
+ * @returns {apiVersion} apiVersion if found, empty apiVersion if not
  */
-function apiVersionExists(versionList: apiVersions, lookingFor: string): apiVersion {
+export function apiVersionExists(versionList: apiVersions, lookingFor: string): apiVersion {
   let returnVersion = {} as apiVersion
   for (const versionFromList of versionList.nodes) {
     if (versionFromList.name === lookingFor) {
@@ -16,5 +16,3 @@ function apiVersionExists(versionList: apiVersions, lookingFor: string): apiVers
   }
   return returnVersion
 }
-
-export { apiVersionExists }

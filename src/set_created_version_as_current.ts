@@ -1,14 +1,15 @@
-import { gql } from 'graphql-request'
+import { gql, GraphQLClient } from 'graphql-request'
 import { PlatformAPIError } from './errors'
 import { apiVersion, apiVersionStatus } from './types'
 
 /**
- * Set the newly created version of the API as active
- * @param {string} api_version_id
+ * Set the status of the newly created apiVersion to draft, active or deprecated
+ * @param {apiVersion} apiVersionToSetStatus apiVersion object of the API version we want to set the versionStatus for
+ * @param {apiVersionStatus} desiredStatus the desired versionStatus (draft, active or deprecated)
  * @param {object} client The GraphQL Client object for reuse
+ * @returns {Promise<boolean>} Returns true if succeeded, throws otherwise 
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function setApiStatus(apiVersionToSetStatus: apiVersion, desiredStatus: apiVersionStatus, client: any): Promise<boolean> {
+export async function setApiStatus(apiVersionToSetStatus: apiVersion, desiredStatus: apiVersionStatus, client: GraphQLClient): Promise<boolean> {
   const mutation = gql`
         mutation updateApiVersions($apiVersions: [ApiVersionUpdateInput!]!) {
           updateApiVersions(apiVersions: $apiVersions) {

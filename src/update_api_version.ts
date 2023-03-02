@@ -2,22 +2,18 @@ import axios from 'axios'
 import * as fs from 'fs'
 import FormData = require('form-data')
 import * as core from '@actions/core'
-import { formGraphqlHeaders } from '../src/headers'
-import { SpecParsingError, UnexpectedStatusError } from '../src/errors'
+import { formGraphqlHeaders } from './headers'
+import { SpecParsingError, UnexpectedStatusError } from './errors'
 import { apiVersion } from './types'
 
 /**
- * Creates and returns a new API version for a given API
-*  The return value is a bit strange, because we cannot give back any useful information about the
-*  updated API or updated API version, since the only thing we can get back from the mutation is 
-*  the apiID (which we already have), a trackingId (which doesn't help us much) and an array of warnings,
-*  which we aren't handling at the moment. At some point we might return either an empty array of
-*  strings or an array of warnings.
+*  Updates an existing API version with the contents of the provided spec file <br/>
+*  Return a boolean true if the update succeeded or throw an error if not
  * @param {string} specPath Version name or number for the new API version
- * @param {string} apiVersionId The id of the API version to update
- * @returns {string} The HTTP response in number format (200, 400, etc.)
+ * @param {apiVersion} apiVersion The API version object to update
+ * @returns {Promise<boolean>} A truthy boolean if the update succeeded
  */
-async function updateApiVersion(specPath: string, apiVersion: apiVersion): Promise<boolean> {
+export async function updateApiVersion(specPath: string, apiVersion: apiVersion): Promise<boolean> {
   const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true })
   const query = `
         mutation updateApisFromRapidOas($updates: [ApiUpdateFromRapidOasInput!]!) {
@@ -69,5 +65,3 @@ async function updateApiVersion(specPath: string, apiVersion: apiVersion): Promi
     )
   }
 }
-
-export { updateApiVersion }

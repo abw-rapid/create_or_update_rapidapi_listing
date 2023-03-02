@@ -3,12 +3,15 @@ import { NoApiVersionsFoundError } from './errors'
 import { GraphQLClient } from 'graphql-request'
 
 /**
- * Fetch the id of the latest version of an API
+ * Fetch the apiVersions of an API on the Hub
+ * The apiVersions (plural!) object is a part of the GraphQL response that is used throughout 
+ * this code as the source of apiVersions for a specific API
+ * TODO: it might make more sense to parse the apiVersions object into an array of apiVersion objects
  * @param {string} apiId The id of the API we want to get the latest version for
  * @param {GraphQLClient} client The GraphQL Client object for reuse
- * @return {Promise<Array<apiVersion>>} An array containing the apiVersions for this apiId
+ * @return {Promise<apiVersions>} An array containing the apiVersions for this apiId
  */
-async function getApiVersions(apiId: string, client: GraphQLClient): Promise<apiVersions> {
+export async function getApiVersions(apiId: string, client: GraphQLClient): Promise<apiVersions> {
   const query = `
     query apiVersions($where: ApiVersionWhereInput) {
         apiVersions(where: $where) {
@@ -32,7 +35,7 @@ async function getApiVersions(apiId: string, client: GraphQLClient): Promise<api
     result = await client.request(query, variables)
   } catch (err) {
     console.log(err)
-    throw new Error('Unknown error in get_current_api_version')
+    throw new Error(`Unknown error while getting API versions for ${apiId}`)
   }
 
   if (result.apiVersions.nodes.length > 0) {
@@ -41,5 +44,3 @@ async function getApiVersions(apiId: string, client: GraphQLClient): Promise<api
     throw new NoApiVersionsFoundError('No existing API versions found: that should not be possible')
   }
 }
-
-export { getApiVersions }

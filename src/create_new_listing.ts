@@ -11,7 +11,7 @@ import { formGraphqlHeaders } from './headers'
  * @param {string} specPath Filename of the OAS to be uploaded
  * @return {string} The id of the newly created API
  */
-async function createNewListing (specPath: string): Promise<string> {
+export async function createNewListing(specPath: string): Promise<string> {
   const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true })
 
   const query = `
@@ -46,11 +46,10 @@ async function createNewListing (specPath: string): Promise<string> {
 
   try {
     const res = await axios.request(options)
+    // res.data.data.createApisFromRapidOas is a single element array
     return res.data.data.createApisFromRapidOas[0].apiId
   } catch (e) {
     console.log(e.response.error)
-    throw new UnexpectedResponseError('Unknown error in create_new_listing')
+    throw new UnexpectedResponseError('Unknown error in while creating new API listing')
   }
 }
-
-export { createNewListing }

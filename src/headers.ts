@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 
-function formGraphqlHeaders (): object {
+export function formGraphqlHeaders(): object {
   const xRapidapiKey = core.getInput('X_RAPIDAPI_KEY', { required: true })
   const xRapidapiIdentityKey = core.getInput('X_RAPIDAPI_IDENTITY_KEY', { required: false })
   const xRapidapiGraphqlHost = core.getInput('X_RAPIDAPI_GRAPHQL_HOST', {
@@ -15,7 +15,7 @@ function formGraphqlHeaders (): object {
   }
 }
 
-function graphqlHeaders (): object {
+export function graphqlHeaders(): object {
   const xRapidapiKey = core.getInput('X_RAPIDAPI_KEY', { required: true })
   const xRapidapiIdentityKey = core.getInput('X_RAPIDAPI_IDENTITY_KEY', { required: false })
   const xRapidapiGraphqlHost = core.getInput('X_RAPIDAPI_GRAPHQL_HOST', {
@@ -29,5 +29,3 @@ function graphqlHeaders (): object {
     'x-rapidapi-host': xRapidapiGraphqlHost
   }
 }
-
-export { formGraphqlHeaders, graphqlHeaders }

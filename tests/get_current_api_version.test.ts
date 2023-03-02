@@ -1,4 +1,5 @@
-import { getCurrentApiVersion } from '../src/get_current_api_version'
+import { getCurrentApiVersion, getCurrentVersion } from '../src/get_current_api_version'
+import { apiVersions, apiVersionStatus } from '../src/types'
 import { env } from 'process'
 import * as g from 'graphql-request'
 
@@ -65,4 +66,30 @@ test('test formatting of graphql query for current version', async () => {
     c
   )
   expect(mockRequest.mock.calls).toEqual(result)
+})
+
+const currentVersionList: apiVersions = {
+  'nodes': [
+    {
+      id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-ba02c06fbddb',
+      name: '0.4.3',
+      current: true,
+      versionStatus: apiVersionStatus.draft
+    },
+    {
+      id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-zzzzzzzzzzzz',
+      name: '0.4.2',
+      current: false,
+      versionStatus: apiVersionStatus.active
+    }
+  ]
+}
+const expected = {
+  id: 'apiversion_a6ee5ca5-3bca-47b0-95a6-ba02c06fbddb',
+  name: '0.4.3',
+  current: true,
+  versionStatus: apiVersionStatus.draft
+}
+test('gets the current version from a list of apiVersions', () => {
+  expect(getCurrentVersion(currentVersionList)).toStrictEqual(expected)
 })
