@@ -15,6 +15,7 @@ import { UpdatePolicyError } from './errors'
 import { findClosest, findNewer, findOlder } from './findApiVersions'
 import { getUpdateLevel } from './getUpdateLevel'
 import { updateApiVersion } from './update_api_version'
+import { handleUpdate } from './handle_update'
 
 
 (async function () {
@@ -95,21 +96,29 @@ import { updateApiVersion } from './update_api_version'
                 console.log("=====> The closest, older version is: ", closestOlder)
                 const semverUpdate = getUpdateLevel(closestOlder.name, null, apiVersionFromSpec)
                 console.log(`=====> Compared to ${closestOlder.name}, this update is: ${semverUpdate}`)
-                // TODO: implement update / create code
+                const policy = handleUpdate(semverUpdate, false)
+                console.log(policy)
             } else {
                 // apiVersions with newer versions exist, therefore, we need to compare to both the
                 // closest older and closest newer apiVersion to determine wether this is a patch
                 // a minor or a major version update
-                console.log('=====> Uploaded apiVersion is older than the following apiVersion(s):')
+                console.log('=====> Uploaded apiVersion is older than the following apiVersion(s) on Hub:')
                 console.log('=====> ', newerApiVersions.map(v => v.name).sort().join(', '))
                 const closestNewer = findClosest(newerApiVersions, apiVersionFromSpec)
                 const closestOlder = findClosest(olderApiVersions, apiVersionFromSpec)
                 console.log("======> Closest newer version: ", closestNewer.name)
-                console.log("======> Closest older version: ", closestOlder.name)
-                const semverUpdate = getUpdateLevel(closestOlder.name, closestNewer.name, apiVersionFromSpec)
-                console.log(`=====> Compared to ${closestOlder.name} and ${closestNewer.name}` +
-                    `, this update is: ${semverUpdate}`)
-                // TODO: implement update / create code
+                let semverUpdate = ""
+                if (closestOlder) { // only if there actually *are* older apiVersions...
+                    console.log("======> Closest older version: ", closestOlder.name)
+                    semverUpdate = getUpdateLevel(closestOlder.name, closestNewer.name, apiVersionFromSpec)
+                    console.log(`=====> Compared to ${closestOlder.name} and ${closestNewer.name}` +
+                        `, this update is: ${semverUpdate}`)
+                } else {
+                    semverUpdate = getUpdateLevel(null, closestNewer.name, apiVersionFromSpec)
+                    console.log(`=====> Compared to ${closestNewer.name}, this update is: ${semverUpdate}`)
+                }
+                const policy = handleUpdate(semverUpdate, true)
+                console.log(policy)
             }
 
             // we know the new version

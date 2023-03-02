@@ -49,9 +49,23 @@ export enum updateEnum {
   patch
 }
 
+// enum to describe the update method
+export enum updateMethod {
+  create = "create",
+  update = "update",
+  forbidden = "forbidden"
+}
+
+
 // status enum for apiVersions
 export enum apiVersionStatus {
   draft = "DRAFT",
   active = "ACTIVE",
   deprecated = "DEPRECATED"
+}
+
+export type apiPolicy = {
+  method: updateMethod
+  setCurrent: boolean
+  createAs: apiVersionStatus
 }
