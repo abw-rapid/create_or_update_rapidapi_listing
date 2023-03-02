@@ -1,5 +1,6 @@
 import * as toml from 'toml'
 import * as fs from 'fs'
+import * as core from '@actions/core'
 import { api, apiPolicy, apiVersion, updateEnum, updateMethod } from './types'
 import { readSpec } from './read_spec'
 import { createApiVersion } from './create_api_version'
@@ -8,7 +9,7 @@ import { GraphQLClient } from 'graphql-request'
 import { updateApiVersion } from './update_api_version'
 import { setApiCurrent, setApiStatus } from './set_created_version_as_current'
 
-export function getUpdatePolicy(updateLevel: string, existingApi: api, isOlder: boolean): apiPolicy {
+export function getUpdatePolicy(updateLevel: string, existingApi: api, isOlder: boolean, closestOlder: apiVersion | undefined): apiPolicy {
     let config
     const policy: apiPolicy = {} as apiPolicy
     try {
@@ -19,11 +20,17 @@ export function getUpdatePolicy(updateLevel: string, existingApi: api, isOlder: 
     console.log('')
     console.log('==> We are handling update at level: ', updateLevel)
     console.log('==> Relevant policy:')
+    if (closestOlder === undefined && config.update_policy[updateLevel] === "update") {
+        console.log('===> Update policy: create')
+        console.warn('====> Update policy is "update", but overriding to "create" as no older versions exist.')
+        policy.method = updateMethod['create']
+    } else {
+        console.log(`===> Update policy: ${config.update_policy[updateLevel] as string}`)
+        policy.method = config.update_policy[updateLevel] as updateMethod
+    }
     console.log(`===> Allow older: ${config.allow_older[updateLevel] as string}`)
-    console.log(`===> Update policy: ${config.update_policy[updateLevel] as string}`)
     console.log(`===> Set new as current: ${config.auto_current[updateLevel] as string}`)
     console.log(`===> Create as: ${config.general.create_as as string}`)
-    policy.method = config.update_policy[updateLevel] as updateMethod
     policy.setCurrent = config.auto_current[updateLevel]
     policy.createAs = config.general.create_as
     policy.updateType = updateLevel as updateEnum
@@ -37,6 +44,7 @@ export function getUpdatePolicy(updateLevel: string, existingApi: api, isOlder: 
 export async function handleUpdate(policy: apiPolicy, specPath: string, toBeUpdated: apiVersion | null, c: GraphQLClient): Promise<boolean> {
     const spec = readSpec(specPath)
     const parsedSpecVersion = getApiVersionFromSpec(spec)
+    let outputApiVersion
     console.log('')
 
     switch (policy.method as updateMethod) {
@@ -47,6 +55,7 @@ export async function handleUpdate(policy: apiPolicy, specPath: string, toBeUpda
         case updateMethod.create: {
             console.log('====> Creating new API version in Hub...')
             const newVersionId = await createApiVersion(parsedSpecVersion, policy.api, c)
+            outputApiVersion = newVersionId.id
             console.log('=====> New version id: ' + newVersionId.id)
             if (await updateApiVersion(specPath, newVersionId)) {
                 console.log(`=====> Successfully uploaded new API version into the Hub as ${parsedSpecVersion}`)
@@ -76,6 +85,7 @@ export async function handleUpdate(policy: apiPolicy, specPath: string, toBeUpda
         case updateMethod.update: {
             if (toBeUpdated) {
                 console.log(`====> Updating existing API version ${toBeUpdated.id} in Hub...`)
+                outputApiVersion = toBeUpdated.id
                 if (await updateApiVersion(specPath, toBeUpdated)) {
                     console.log(`=====> Successfully updated API version in the Hub to ${parsedSpecVersion}`)
                 } else {
@@ -88,5 +98,8 @@ export async function handleUpdate(policy: apiPolicy, specPath: string, toBeUpda
             break
         }
     }
+    core.setOutput('api_id', policy.api)
+    core.setOutput('api_version_name', parsedSpecVersion)
+    core.setOutput('api_version_id', outputApiVersion)
     return true
 }
