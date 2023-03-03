@@ -1,4 +1,4 @@
-import { getUpdateLevel } from '../src/getUpdateLevel'
+import { getUpdateLevel } from '../src/get_update_level'
 
 test.each([
     { a: '0.3.9', b: '0.4.4', c: '0.4.0', expected: 'patch' },

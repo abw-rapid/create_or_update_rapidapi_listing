@@ -1,5 +1,5 @@
 import { apiVersions, apiVersionStatus } from '../src/types'
-import { findClosest, findNewer, findOlder } from '../src/findApiVersions'
+import { findClosest, findNewer, findOlder } from '../src/find_api_versions'
 
 const versionList: apiVersions = {
   'nodes': [
