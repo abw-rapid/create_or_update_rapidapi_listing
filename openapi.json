@@ -432,7 +432,7 @@
     "x-category": "Other",
     "x-long-description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sagittis at massa a rutrum. Ut sed tellus sed tellus dictum accumsan. Cras a dui viverra, lobortis leo et, mollis sem. Mauris bibendum dui finibus purus volutpat porta. Aliquam sed quam ut felis aliquet rhoncus aliquam et urna. Suspendisse potenti. Fusce sit amet arcu a sem laoreet tincidunt ut et tellus. Nulla viverra erat non diam sagittis dignissim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi fringilla risus vel ligula condimentum consequat. Vivamus eget velit lectus.",
     "description": "An API to manage the product catalog and orders in my store. [Download OpenAPI 3.0 Spec](/-json). This API is open and may be used for demonstration / testing purposes. Data will be periodically wiped. [Download Paw Project](/My-Store-API.paw).",
-    "version": "1.0.4",
+    "version": "1.6.0",
     "contact": {}
   },
   "tags": [],
