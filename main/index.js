@@ -42871,7 +42871,7 @@ exports.UnexpectedStatusError = UnexpectedStatusError;
 
 /***/ }),
 
-/***/ 2533:
+/***/ 6385:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -42931,45 +42931,6 @@ function findClosest(versionList, lookingFor) {
     return versionList[offsets.indexOf(minOffset)];
 }
 exports.findClosest = findClosest;
-
-
-/***/ }),
-
-/***/ 3783:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getUpdateLevel = void 0;
-const semver_1 = __nccwpck_require__(1383);
-/**
- * Get the "level" of the update the provided spec would result into (major, minor or patch)
- *
- * @param {string|null} closestOlder string containing the version of the closest newer version
- * of "null" if no older versions exist
- * @param {string|null} closestNewer string containing the version of the closest newer version
- * or "null" if no newer versions exist
- * @param {string} uploadedApiVersion string containing the version number of the new spec
- * @return {Promise<boolean>} An apiPolicy object containing information on how to handle the new apiVersion
- */
-function getUpdateLevel(closestOlder, closestNewer, uploadedApiVersion) {
-    const diffs = [];
-    if (closestOlder) {
-        diffs.push((0, semver_1.diff)(closestOlder, uploadedApiVersion));
-    }
-    if (closestNewer) {
-        diffs.push((0, semver_1.diff)(closestNewer, uploadedApiVersion));
-    }
-    if (diffs.includes('patch')) {
-        return 'patch';
-    }
-    else if (diffs.includes('minor')) {
-        return 'minor';
-    }
-    return 'major';
-}
-exports.getUpdateLevel = getUpdateLevel;
 
 
 /***/ }),
@@ -43098,6 +43059,45 @@ exports.getCurrentVersion = getCurrentVersion;
 
 /***/ }),
 
+/***/ 5633:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getUpdateLevel = void 0;
+const semver_1 = __nccwpck_require__(1383);
+/**
+ * Get the "level" of the update the provided spec would result into (major, minor or patch)
+ *
+ * @param {string|null} closestOlder string containing the version of the closest newer version
+ * of "null" if no older versions exist
+ * @param {string|null} closestNewer string containing the version of the closest newer version
+ * or "null" if no newer versions exist
+ * @param {string} uploadedApiVersion string containing the version number of the new spec
+ * @return {Promise<boolean>} An apiPolicy object containing information on how to handle the new apiVersion
+ */
+function getUpdateLevel(closestOlder, closestNewer, uploadedApiVersion) {
+    const diffs = [];
+    if (closestOlder) {
+        diffs.push((0, semver_1.diff)(closestOlder, uploadedApiVersion));
+    }
+    if (closestNewer) {
+        diffs.push((0, semver_1.diff)(closestNewer, uploadedApiVersion));
+    }
+    if (diffs.includes('patch')) {
+        return 'patch';
+    }
+    else if (diffs.includes('minor')) {
+        return 'minor';
+    }
+    return 'major';
+}
+exports.getUpdateLevel = getUpdateLevel;
+
+
+/***/ }),
+
 /***/ 983:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -43128,8 +43128,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.handleUpdate = exports.getUpdatePolicy = void 0;
-const toml = __importStar(__nccwpck_require__(4920));
-const fs = __importStar(__nccwpck_require__(7147));
 const core = __importStar(__nccwpck_require__(2186));
 const types_1 = __nccwpck_require__(7012);
 const read_spec_1 = __nccwpck_require__(2425);
@@ -43137,6 +43135,7 @@ const create_api_version_1 = __nccwpck_require__(9728);
 const parse_spec_1 = __nccwpck_require__(1740);
 const update_api_version_1 = __nccwpck_require__(8168);
 const set_created_version_as_current_1 = __nccwpck_require__(1541);
+const read_config_1 = __nccwpck_require__(22);
 /**
  * Build an apiPolicy object that we can use below to perform the update or create action for a (new) apiVersion </br>
  *
@@ -43151,34 +43150,29 @@ const set_created_version_as_current_1 = __nccwpck_require__(1541);
  * @return {apiPolicy} An apiPolicy object containing information on how to handle the new apiVersion
  */
 function getUpdatePolicy(updateLevel, existingApi, isOlder, closestOlder) {
-    let config;
-    const policy = {};
-    try {
-        config = toml.parse(fs.readFileSync('./rapidConfig.default.toml', 'utf-8'));
-    }
-    catch {
-        throw new Error('Unable to open default configuration file rapidConfig.default.toml');
-    }
+    const config = (0, read_config_1.readConfig)();
     console.log('');
     console.log('==> We are handling update at level: ', updateLevel);
     console.log('==> Relevant policy:');
-    if (closestOlder === undefined && config.update_policy[updateLevel] === "update") {
+    const policy = {};
+    const configPolicy = config[updateLevel];
+    if (closestOlder === undefined && configPolicy.update_policy === "update") {
         console.log('===> Update policy: create');
         console.warn('====> Update policy is "update", but overriding to "create" as no older versions exist.');
         policy.method = types_1.updateMethod['create'];
     }
     else {
-        console.log(`===> Update policy: ${config.update_policy[updateLevel]}`);
-        policy.method = config.update_policy[updateLevel];
+        console.log(`===> Update policy: ${configPolicy.update_policy}`);
+        policy.method = configPolicy.update_policy;
     }
-    console.log(`===> Allow older: ${config.allow_older[updateLevel]}`);
-    console.log(`===> Set new as current: ${config.auto_current[updateLevel]}`);
+    console.log(`===> Allow older: ${configPolicy.allow_older}`);
+    console.log(`===> Set new as current: ${configPolicy.auto_current}`);
     console.log(`===> Create as: ${config.general.create_as}`);
-    policy.setCurrent = config.auto_current[updateLevel];
+    policy.setCurrent = configPolicy.auto_current;
     policy.createAs = config.general.create_as;
     policy.updateType = updateLevel;
     policy.api = existingApi.id;
-    if (isOlder === true && config.allow_older[updateLevel] === false) {
+    if (isOlder === true && configPolicy.allow_older === false) {
         policy.method = types_1.updateMethod['forbidden'];
     }
     return policy;
@@ -43360,8 +43354,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const toml = __importStar(__nccwpck_require__(4920));
-const fs = __importStar(__nccwpck_require__(7147));
 const core = __importStar(__nccwpck_require__(2186));
 const g = __importStar(__nccwpck_require__(2476));
 const dotenv_1 = __importDefault(__nccwpck_require__(2437));
@@ -43374,19 +43366,14 @@ const create_new_listing_1 = __nccwpck_require__(6825);
 const get_current_api_version_1 = __nccwpck_require__(3937);
 const apiVersion_already_exists_1 = __nccwpck_require__(4901);
 const errors_1 = __nccwpck_require__(79);
-const findApiVersions_1 = __nccwpck_require__(2533);
-const getUpdateLevel_1 = __nccwpck_require__(3783);
+const find_api_versions_1 = __nccwpck_require__(6385);
+const get_update_level_1 = __nccwpck_require__(5633);
 const update_api_version_1 = __nccwpck_require__(8168);
 const handle_update_1 = __nccwpck_require__(983);
+const read_config_1 = __nccwpck_require__(22);
 (async function () {
     dotenv_1.default.config();
-    let config;
-    try {
-        config = toml.parse(fs.readFileSync('./rapidConfig.default.toml', 'utf-8'));
-    }
-    catch {
-        throw new Error('Unable to open default configuration file rapidConfig.default.toml');
-    }
+    const config = (0, read_config_1.readConfig)();
     const specPath = core.getInput('SPEC_PATH', { required: true });
     const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true });
     const ownerId = core.getInput('OWNER_ID', { required: true });
@@ -43437,7 +43424,7 @@ const handle_update_1 = __nccwpck_require__(983);
                 }
             }
             else {
-                const message = "ERROR: Updating existing apiVersion with new spec not allow by config.";
+                const message = "ERROR: Updating existing apiVersion by spec with same version number not allow by config.";
                 throw new errors_1.UpdatePolicyError(message);
             }
         }
@@ -43447,17 +43434,17 @@ const handle_update_1 = __nccwpck_require__(983);
             // At this point, we know that the uploaded version doesn't exist on the Hub yet. In other words,
             // As we cannot have an API without any apiVersions on the Hub, we can expect to either find newer 
             // apiVersions, older apiVersions, or both.
-            const newerApiVersions = (0, findApiVersions_1.findNewer)(existingVersions, apiVersionFromSpec);
-            const olderApiVersions = (0, findApiVersions_1.findOlder)(existingVersions, apiVersionFromSpec);
+            const newerApiVersions = (0, find_api_versions_1.findNewer)(existingVersions, apiVersionFromSpec);
+            const olderApiVersions = (0, find_api_versions_1.findOlder)(existingVersions, apiVersionFromSpec);
             let policy = {};
             let closestOlder = {};
             if (newerApiVersions.length === 0) {
                 // The provided spec has a higher version number than any of the existing ones
                 // in other words, it is the newest apiVersion we've ever seen!
                 console.log("=====> No newer apiVersions found on the Hub");
-                closestOlder = (0, findApiVersions_1.findClosest)(olderApiVersions, apiVersionFromSpec);
+                closestOlder = (0, find_api_versions_1.findClosest)(olderApiVersions, apiVersionFromSpec);
                 console.log("======> The closest, older version is: ", closestOlder.name);
-                const semverUpdate = (0, getUpdateLevel_1.getUpdateLevel)(closestOlder.name, null, apiVersionFromSpec);
+                const semverUpdate = (0, get_update_level_1.getUpdateLevel)(closestOlder.name, null, apiVersionFromSpec);
                 console.log(`======> Compared to ${closestOlder.name}, this update is: ${semverUpdate}`);
                 policy = (0, handle_update_1.getUpdatePolicy)(semverUpdate, api, false, closestOlder);
             }
@@ -43467,18 +43454,18 @@ const handle_update_1 = __nccwpck_require__(983);
                 // a minor or a major version update
                 console.log('=====> Uploaded apiVersion is older than the following apiVersion(s) on Hub:');
                 console.log('=====> ', newerApiVersions.map(v => v.name).sort().join(', '));
-                const closestNewer = (0, findApiVersions_1.findClosest)(newerApiVersions, apiVersionFromSpec);
-                closestOlder = (0, findApiVersions_1.findClosest)(olderApiVersions, apiVersionFromSpec);
+                const closestNewer = (0, find_api_versions_1.findClosest)(newerApiVersions, apiVersionFromSpec);
+                closestOlder = (0, find_api_versions_1.findClosest)(olderApiVersions, apiVersionFromSpec);
                 console.log("======> Closest newer version: ", closestNewer.name);
                 let semverUpdate = "";
                 if (closestOlder) { // only if there actually *are* older apiVersions...
                     console.log("======> Closest older version: ", closestOlder.name);
-                    semverUpdate = (0, getUpdateLevel_1.getUpdateLevel)(closestOlder.name, closestNewer.name, apiVersionFromSpec);
+                    semverUpdate = (0, get_update_level_1.getUpdateLevel)(closestOlder.name, closestNewer.name, apiVersionFromSpec);
                     console.log(`======> Compared to ${closestOlder.name} and ${closestNewer.name}` +
                         `, this update is: ${semverUpdate}`);
                 }
                 else {
-                    semverUpdate = (0, getUpdateLevel_1.getUpdateLevel)(null, closestNewer.name, apiVersionFromSpec);
+                    semverUpdate = (0, get_update_level_1.getUpdateLevel)(null, closestNewer.name, apiVersionFromSpec);
                     console.log(`=====> Compared to ${closestNewer.name}, this update is: ${semverUpdate}`);
                 }
                 policy = (0, handle_update_1.getUpdatePolicy)(semverUpdate, api, true, closestOlder);
@@ -43544,6 +43531,99 @@ function getApiNameFromSpec(spec) {
     }
 }
 exports.getApiNameFromSpec = getApiNameFromSpec;
+
+
+/***/ }),
+
+/***/ 22:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.readConfig = void 0;
+const toml = __importStar(__nccwpck_require__(4920));
+const fs = __importStar(__nccwpck_require__(7147));
+const default_config = `
+[general]
+create_as = "active"
+allow_update_existing = false
+allow_update_deprecated = true
+
+[major]
+update_policy = "create"
+allow_older = true
+auto_current = false
+
+[minor]
+update_policy = "update"
+allow_older = true
+auto_current = false
+
+[patch]
+update_policy = "update"
+allow_older = true
+auto_current = false
+`;
+/** Read the branch specific rapidConfig.$branch.config configuration file,
+ * or the default rapidConfig.default.config if that doesn't exist.
+ * Throw error if no configuration file can be found / read into toml.
+ * @return {string} An object containing the (branch specific) configuration
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function readConfig() {
+    let config;
+    try {
+        let branch = "";
+        if (process.env.GITHUB_REF_NAME !== undefined) {
+            branch = process.env.GITHUB_REF_NAME;
+        }
+        config = toml.parse(fs.readFileSync(`rapidConfig.${branch}.toml`, 'utf-8'));
+        console.log(`Using configuration file rapidConfig.${branch}.toml`);
+    }
+    catch (e) {
+        if (e.code === 'ENOENT') {
+            console.warn('No branch specific configuration file found. Trying default.');
+            try {
+                config = toml.parse(fs.readFileSync('rapidConfig.default.toml', 'utf-8'));
+            }
+            catch (e) {
+                console.warn('No default configuration file found, using built-in defaults.');
+                config = toml.parse(default_config);
+            }
+        }
+        else {
+            console.error(e.code);
+            throw new Error('Unknown problem trying to read configuration file. ' +
+                'Please check your rapidConfig file(s)');
+        }
+    }
+    return config;
+}
+exports.readConfig = readConfig;
 
 
 /***/ }),
