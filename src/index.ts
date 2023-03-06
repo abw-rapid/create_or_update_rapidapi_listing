@@ -17,19 +17,14 @@ import { getUpdateLevel } from './get_update_level'
 import { updateApiVersion } from './update_api_version'
 import { getUpdatePolicy, handleUpdate } from './handle_update'
 import { apiPolicy, apiVersion } from './types'
+import { readConfig } from './read_config'
 
 
 (async function () {
 
     dotenv.config()
 
-    let config
-    try {
-        config = toml.parse(fs.readFileSync('./rapidConfig.default.toml', 'utf-8'))
-    } catch {
-        throw new Error('Unable to open default configuration file rapidConfig.default.toml')
-    }
-
+    const config = readConfig()
     const specPath = core.getInput('SPEC_PATH', { required: true })
     const graphqlUrl = core.getInput('GRAPHQL_URL', { required: true })
     const ownerId = core.getInput('OWNER_ID', { required: true })

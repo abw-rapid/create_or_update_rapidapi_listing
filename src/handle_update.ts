@@ -1,5 +1,3 @@
-import * as toml from 'toml'
-import * as fs from 'fs'
 import * as core from '@actions/core'
 import { api, apiPolicy, apiVersion, updateEnum, updateMethod } from './types'
 import { readSpec } from './read_spec'
@@ -8,6 +6,7 @@ import { getApiVersionFromSpec } from './parse_spec'
 import { GraphQLClient } from 'graphql-request'
 import { updateApiVersion } from './update_api_version'
 import { setApiCurrent, setApiStatus } from './set_created_version_as_current'
+import { readConfig } from './read_config'
 
 /**
  * Build an apiPolicy object that we can use below to perform the update or create action for a (new) apiVersion </br>
@@ -23,32 +22,30 @@ import { setApiCurrent, setApiStatus } from './set_created_version_as_current'
  * @return {apiPolicy} An apiPolicy object containing information on how to handle the new apiVersion
  */
 export function getUpdatePolicy(updateLevel: string, existingApi: api, isOlder: boolean, closestOlder: apiVersion | undefined): apiPolicy {
-    let config
-    const policy: apiPolicy = {} as apiPolicy
-    try {
-        config = toml.parse(fs.readFileSync('./rapidConfig.default.toml', 'utf-8'))
-    } catch {
-        throw new Error('Unable to open default configuration file rapidConfig.default.toml')
-    }
+    const config = readConfig()
     console.log('')
     console.log('==> We are handling update at level: ', updateLevel)
     console.log('==> Relevant policy:')
-    if (closestOlder === undefined && config.update_policy[updateLevel] === "update") {
+
+    const policy: apiPolicy = {} as apiPolicy
+    const configPolicy = config[updateLevel]
+    if (closestOlder === undefined && configPolicy.update_policy === "update") {
         console.log('===> Update policy: create')
         console.warn('====> Update policy is "update", but overriding to "create" as no older versions exist.')
         policy.method = updateMethod['create']
     } else {
-        console.log(`===> Update policy: ${config.update_policy[updateLevel] as string}`)
-        policy.method = config.update_policy[updateLevel] as updateMethod
+        console.log(`===> Update policy: ${configPolicy.update_policy as string}`)
+        policy.method = configPolicy.update_policy as updateMethod
     }
-    console.log(`===> Allow older: ${config.allow_older[updateLevel] as string}`)
-    console.log(`===> Set new as current: ${config.auto_current[updateLevel] as string}`)
+
+    console.log(`===> Allow older: ${configPolicy.allow_older as string}`)
+    console.log(`===> Set new as current: ${configPolicy.auto_current as string}`)
     console.log(`===> Create as: ${config.general.create_as as string}`)
-    policy.setCurrent = config.auto_current[updateLevel]
+    policy.setCurrent = configPolicy.auto_current
     policy.createAs = config.general.create_as
     policy.updateType = updateLevel as updateEnum
     policy.api = existingApi.id
-    if (isOlder === true && config.allow_older[updateLevel] === false) {
+    if (isOlder === true && configPolicy.allow_older === false) {
         policy.method = updateMethod['forbidden']
     }
     return policy
