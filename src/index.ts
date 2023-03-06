@@ -1,5 +1,3 @@
-import * as toml from 'toml'
-import * as fs from 'fs'
 import * as core from '@actions/core'
 import * as g from 'graphql-request'
 import dotenv from 'dotenv'
