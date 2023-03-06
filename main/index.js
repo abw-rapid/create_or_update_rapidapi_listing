@@ -43601,7 +43601,6 @@ function readConfig() {
         if (process.env.GITHUB_REF_NAME !== undefined) {
             branch = process.env.GITHUB_REF_NAME;
         }
-        console.log("branch name: ", branch);
         config = toml.parse(fs.readFileSync(`rapidConfig.${branch}.toml`, 'utf-8'));
         console.log(`Using configuration file rapidConfig.${branch}.toml`);
     }
@@ -43609,17 +43608,25 @@ function readConfig() {
         if (e.code === 'ENOENT') {
             console.warn('No branch specific configuration file found. Trying default.');
             try {
-                console.log('Trying rapidConfig.default.toml...');
                 config = toml.parse(fs.readFileSync('rapidConfig.default.toml', 'utf-8'));
+                console.log('Using default configuration file rapidConfig.default.toml...');
             }
             catch (e) {
-                console.warn('error: ', e);
-                console.warn('No default configuration file found, using built-in defaults.');
-                config = toml.parse(default_config);
+                if (e.name === 'SyntaxError') {
+                    throw new SyntaxError('Syntax error encountered while trying to read configuration file. ' +
+                        'Please check your rapidConfig file(s)');
+                }
+                else {
+                    config = toml.parse(default_config);
+                    console.warn('No default configuration file found, using built-in defaults.');
+                }
             }
         }
+        else if (e.name === 'SyntaxError') {
+            throw new SyntaxError('Syntax error encountered while trying to read configuration file. ' +
+                'Please check your rapidConfig file(s)');
+        }
         else {
-            console.error(e.code);
             throw new Error('Unknown problem trying to read configuration file. ' +
                 'Please check your rapidConfig file(s)');
         }
