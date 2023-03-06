@@ -74,7 +74,7 @@ import { readConfig } from './read_config'
                     console.error("Problem updating existing API version in Hub.")
                 }
             } else {
-                const message = "ERROR: Updating existing apiVersion with new spec not allow by config."
+                const message = "ERROR: Updating existing apiVersion by spec with same version number not allow by config."
                 throw new UpdatePolicyError(message)
             }
         } else {
