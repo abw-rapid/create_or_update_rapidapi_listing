@@ -43601,6 +43601,7 @@ function readConfig() {
         if (process.env.GITHUB_REF_NAME !== undefined) {
             branch = process.env.GITHUB_REF_NAME;
         }
+        console.log("branch name: ", branch);
         config = toml.parse(fs.readFileSync(`rapidConfig.${branch}.toml`, 'utf-8'));
         console.log(`Using configuration file rapidConfig.${branch}.toml`);
     }
