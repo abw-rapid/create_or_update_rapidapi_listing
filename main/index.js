@@ -43609,6 +43609,7 @@ function readConfig() {
         if (e.code === 'ENOENT') {
             console.warn('No branch specific configuration file found. Trying default.');
             try {
+                console.log('Trying rapidConfig.default.toml...');
                 config = toml.parse(fs.readFileSync('rapidConfig.default.toml', 'utf-8'));
             }
             catch (e) {
