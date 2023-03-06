@@ -46,6 +46,7 @@ export function readConfig(): any {
                 console.log('Trying rapidConfig.default.toml...')
                 config = toml.parse(fs.readFileSync('rapidConfig.default.toml', 'utf-8'))
             } catch (e) {
+                console.warn('error: ', e)
                 console.warn('No default configuration file found, using built-in defaults.')
                 config = toml.parse(default_config)
             }
