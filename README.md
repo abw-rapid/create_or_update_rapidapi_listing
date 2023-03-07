@@ -111,7 +111,7 @@ By default, the following rules will apply:
 |-------------------------|---------------|-------------------------------------------------------|
 | create_as               | "active"      | New API versions are to be created as active, draft or deprecated |
 | allow_update_existing   | false         | Whether to re-upload if API version already exists
-| allow_update_deprecated | true          | Whether to allow updates to API versions marked deprecated
+| allow_update_deprecated | true          | Whether to allow updates to API versions marked deprecated (not implemented yet)
 | major.update_policy     | "create"      | What to do if the new OpenAPI spec contains a new major version
 | major.allow_older       | true          | Allow creation of major versions that are older than the ones that already exist
 | major.auto_current      | false         | Set new major versions as 'current' automatically?
@@ -138,7 +138,8 @@ default.
 
 The `allow_update_deprecated` key either allows or prohibits updating API versions that
 are marked as deprecated. Sometimes, we might want this (e.g. with a critical bug in an
-API version that is marked as deprecated). This is allowed by default.
+API version that is marked as deprecated). This will be allowed by default, but at this
+moment, this functionality is not implemented yet.
 
 #### Version specific policy
 
@@ -206,6 +207,7 @@ auto_current = false
 
 - You can only use this Action with APIs you own, either through personal or team
   credentials.
+- The `allow_update_deprecated` configuration file key isn't implemented yet.
 - There is no check to verify whether the `owner_id`, `x-rapidapi-identity-key` and the
   `x-rapidapi-key` belong together.
 - There is no check whether an `x-rapidapi-identity-key` is required (in other words:
