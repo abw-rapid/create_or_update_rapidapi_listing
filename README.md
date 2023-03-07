@@ -52,7 +52,7 @@ jobs:
                   owner_id: 12345678
                   graphql_url: https://platform-graphql.p.rapidapi.com/
                   x_rapidapi_key: a-very-long-api-key
-                  x_rapidapi_key: another-very-long-api-key
+                  x_rapidapi_identity_key: another-very-long-api-key
                   x_rapidapi_graphql_host: platform-graphql.yourhub.rapidapi.com
 ```
 
