@@ -115,12 +115,12 @@ By default, the following rules will apply:
 | major.update_policy     | "create"      | What to do if the new OpenAPI spec contains a new major version
 | major.allow_older       | true          | Allow creation of major versions that are older than the ones that already exist
 | major.auto_current      | false         | Set new major versions as 'current' automatically?
-| major.update_policy     | "update"      | What to do if the new OpenAPI spec contains a new minor version
-| major.allow_older       | true          | Allow creation of minor versions that are older than the ones that already exist
-| major.auto_current      | false         | Set new minor versions as 'current' automatically?
-| major.update_policy     | "update"      | What to do if the new OPenAPI spec contains a new patch version
-| major.allow_older       | true          | Allow creation of patch versions that are older than the ones that already exist
-| major.auto_current      | false         | Set new patch versions as 'current'
+| minor.update_policy     | "update"      | What to do if the new OpenAPI spec contains a new minor version
+| minor.allow_older       | true          | Allow creation of minor versions that are older than the ones that already exist
+| minor.auto_current      | false         | Set new minor versions as 'current' automatically?
+| patch.update_policy     | "update"      | What to do if the new OPenAPI spec contains a new patch version
+| patch.allow_older       | true          | Allow creation of patch versions that are older than the ones that already exist
+| patch.auto_current      | false         | Set new patch versions as 'current'
 automatically?
 
 API versions on the Hub can be in three states: active (visible on Hub), draft (visibile
