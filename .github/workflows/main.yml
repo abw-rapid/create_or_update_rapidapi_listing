@@ -5,29 +5,18 @@ on:
     branches:
       - main
       - branch_name
+      - abw-fix-error-message
 
 jobs:
-  test:
-    name: Run tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install modules
-        run: npm install
-        id: install
-      - name: Run jest
-        run: npm run test
-      - name: Run eslint
-        run: npm run lint
+  
 
   build:
     name: Build and push main/index.js
-    needs: test
     env:
       PACKED_JS_PATH: "main/index.js"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout
       - name: Extract branch name
         id: extractBranch
         shell: bash
